@@ -37,8 +37,8 @@
     <SwitchPreference
         android:defaultValue="false"
         android:key="PREF_LIGHT_PERM"
-        android:summaryOff="Allow light sensing"
-        android:summaryOn="Allow light sensing"
+        android:summaryOff="Light sensor disabled"
+        android:summaryOn="Light sensor enabled"
         android:title="@string/pref_title_light_sensor" />
 
 </PreferenceScreen>
