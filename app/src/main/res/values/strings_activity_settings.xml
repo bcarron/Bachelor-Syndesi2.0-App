@@ -1,0 +1,28 @@
+<resources>
+    <string name="action_settings">Settings</string>
+
+    <string name="title_activity_settings">Settings</string>
+    <string name="settings_modify_account">Modify account</string>
+
+    <string name="pref_header_general">General</string>
+    <string name="pref_header_sensor">Sensors</string>
+
+    <string name="pref_title_sensor_rate">Sensing rate</string>
+    <string name="pref_title_light_sensor">Light sensor</string>
+    <string name="pref_title_server_url">Server address</string>
+
+    <string-array name="pref_rate_titles">
+        <item>Very fast</item>
+        <item>Fast</item>
+        <item>Medium</item>
+        <item>Slow</item>
+        <item>Very slow</item>
+    </string-array>
+    <string-array name="pref_rate_values">
+        <item>1</item>
+        <item>5</item>
+        <item>15</item>
+        <item>30</item>
+        <item>60</item>
+    </string-array>
+</resources>

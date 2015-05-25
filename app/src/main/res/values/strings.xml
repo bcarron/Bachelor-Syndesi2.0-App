@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">Sensor Manager</string>
+
+    <string name="sensors">Sensors status</string>
+    <string name="sensors_light_enabled">Light report:</string>
+    <string name="sensors_light_disabled">Enable sensors in the settings</string>
+
+    <string name="server">Server status</string>
+    <string name="connection_no_server_set">Set server address in the settings</string>
+    <string name="connection_no_data">No data to send</string>
+    <string name="connection_ok">Server OK</string>
+    <string name="connection_error">Error connecting to server</string>
+
+    <string name="title_activity_account_setup">Account Setup</string>
+    <string name="account_setup">Please fill in your information below to set up your account</string>
+    <string name="account_setup_empty_fields">Please fill in all the fields</string>
+    <string name="account_setup_acc_created">Account created</string>
+    <string name="account_setup_acc_updated">Account updated</string>
+    <string name="form_name">Name</string>
+    <string name="form_surname">Surname</string>
+    <string name="form_office">Office Number</string>
+    <string name="form_submit_button">Submit</string>
+</resources>

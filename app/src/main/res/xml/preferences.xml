@@ -1,0 +1,35 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="@string/pref_header_general"></PreferenceCategory>
+
+    <Preference android:title="@string/settings_modify_account">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetClass="ch.unige.carron8.bachelor.views.AccountSetup"
+            android:targetPackage="ch.unige.carron8.bachelor" />
+    </Preference>
+
+    <ListPreference
+        android:defaultValue="5"
+        android:entries="@array/pref_rate_titles"
+        android:entryValues="@array/pref_rate_values"
+        android:key="PREF_SENSOR_RATE"
+        android:negativeButtonText="@null"
+        android:positiveButtonText="@null"
+        android:title="@string/pref_title_sensor_rate" />
+
+    <EditTextPreference
+        android:defaultValue=""
+        android:key="PREF_SERVER_URL"
+        android:title="@string/pref_title_server_url" />
+
+    <PreferenceCategory android:title="@string/pref_header_sensor"></PreferenceCategory>
+
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="PREF_LIGHT_PERM"
+        android:summaryOff="Allow light sensing"
+        android:summaryOn="Allow light sensing"
+        android:title="@string/pref_title_light_sensor" />
+
+</PreferenceScreen>
