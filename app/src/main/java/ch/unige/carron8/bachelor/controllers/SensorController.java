@@ -10,6 +10,8 @@ import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -17,6 +19,7 @@ import java.util.ArrayList;
 import ch.unige.carron8.bachelor.R;
 import ch.unige.carron8.bachelor.models.BroadcastTypes;
 import ch.unige.carron8.bachelor.models.PreferenceKeys;
+import ch.unige.carron8.bachelor.views.MainActivity;
 
 /**
  * Manages sensors and reacts to settings changes to adapt the sensors in a singleton controller.
@@ -42,15 +45,14 @@ public class SensorController implements SharedPreferences.OnSharedPreferenceCha
             }
         }
         if (key.equals(PreferenceKeys.PREF_SENSOR_RATE.toString())) {
-            if (sharedPreferences.getBoolean(PreferenceKeys.PREF_LIGHT_PERM.toString(), false)) {
+            if (sharedPreferences.getBoolean(PreferenceKeys.PREF_SENSOR_PERM.toString(), false)) {
                 this.disableSensors();
                 this.startSensors();
                 Log.d("PREF", "Sensor polling rate changed");
             }
         }
-        //TODO: Looking for multiple sensors
-        if (key.equals(PreferenceKeys.PREF_LIGHT_PERM.toString())) {
-            if (sharedPreferences.getBoolean(PreferenceKeys.PREF_LIGHT_PERM.toString(), false)) {
+        if (key.equals(PreferenceKeys.PREF_SENSOR_PERM.toString())) {
+            if (sharedPreferences.getBoolean(PreferenceKeys.PREF_SENSOR_PERM.toString(), false)) {
                 this.startSensors();
                 Log.d("PREF", "Sensors enabled");
             } else {
@@ -70,7 +72,7 @@ public class SensorController implements SharedPreferences.OnSharedPreferenceCha
         mAlarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
-        if (sharedPreferences.getBoolean(PreferenceKeys.PREF_LIGHT_PERM.toString(), false)) {
+        if (sharedPreferences.getBoolean(PreferenceKeys.PREF_SENSOR_PERM.toString(), false)) {
             this.startSensors();
         } else {
             this.disableSensors();
@@ -99,6 +101,7 @@ public class SensorController implements SharedPreferences.OnSharedPreferenceCha
     public void disableSensors() {
         ((TextView) mContext.findViewById(R.id.sensors_status)).setText(R.string.sensors_disabled);
         ((TextView) mContext.findViewById(R.id.server_display_status)).setText(R.string.connection_no_data);
+        ((MainActivity)mContext).removeSensors();
         //Disable alarms
         for(PendingIntent sensorLauncher : sensorsLauncher){
             mAlarmManager.cancel(sensorLauncher);

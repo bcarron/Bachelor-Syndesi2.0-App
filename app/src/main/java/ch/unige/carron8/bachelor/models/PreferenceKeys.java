@@ -7,6 +7,6 @@ package ch.unige.carron8.bachelor.models;
 public enum PreferenceKeys {
     PREF_SERVER_URL,
     PREF_SENSOR_RATE,
-    PREF_LIGHT_PERM,
+    PREF_SENSOR_PERM,
     PREF_SAVED_ACCOUNT
 }

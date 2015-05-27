@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         //Set the sensor list
-        ListView sensorsList = (ListView) findViewById(R.id.sensorsList);
+        ListView sensorsList = (ListView) findViewById(R.id.sensor_list);
         sensorsListData = new ArrayList<HashMap<String, String>>();
         sensorsListadapter = new SimpleAdapter(this, sensorsListData, R.layout.sensor_display, new String[] {"sensor_name", "sensor_data"}, new int[] {R.id.sensor_name, R.id.sensor_data});
         sensorsList.setAdapter(sensorsListadapter);
@@ -65,6 +65,11 @@ public class MainActivity extends AppCompatActivity {
             PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).registerOnSharedPreferenceChangeListener(SensorController.getInstance(this));
             Log.d("ACCOUNT", AccountController.getInstance(getApplicationContext()).getGSON());
         }
+    }
+
+    public void removeSensors(){
+        sensorsListData.clear();
+        sensorsListadapter.notifyDataSetChanged();
     }
 
     public void addSensor(HashMap<String, String> sensorData){
