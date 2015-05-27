@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 /**
+ * Listens to sensors and prepares an AsyncTask to send data to the server and update the user interface.
  * Created by Blaise on 27.05.2015.
  */
 public class SensorListener implements SensorEventListener {
@@ -27,7 +28,6 @@ public class SensorListener implements SensorEventListener {
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
-        Log.d("SENSOR3",sensorEvent.sensor.toString());
         AsyncTask sendData = new SendDataTask(mContext);
         sendData.execute(new SensorEvent[]{sensorEvent});
         mSensorManager.unregisterListener(this);

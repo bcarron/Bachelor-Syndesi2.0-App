@@ -13,11 +13,11 @@
     <string name="pref_title_light_threshold">Light Threshold</string>
 
     <string-array name="pref_rate_titles">
-        <item>Very fast (1s)</item>
-        <item>Fast (5s)</item>
-        <item>Medium (15s)</item>
-        <item>Slow (30s)</item>
-        <item>Very slow (60s)</item>
+        <item>Very fast</item>
+        <item>Fast</item>
+        <item>Medium</item>
+        <item>Slow</item>
+        <item>Very slow</item>
     </string-array>
     <string-array name="pref_rate_values">
         <item>1</item>

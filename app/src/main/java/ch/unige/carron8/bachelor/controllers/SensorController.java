@@ -7,9 +7,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.TextView;
+
+import java.util.ArrayList;
 
 import ch.unige.carron8.bachelor.R;
 import ch.unige.carron8.bachelor.models.BroadcastTypes;
@@ -22,8 +25,7 @@ import ch.unige.carron8.bachelor.models.PreferenceKeys;
 public class SensorController implements SharedPreferences.OnSharedPreferenceChangeListener {
     private static SensorController mInstance;
     private Activity mContext;
-    private PendingIntent mLightSensorLauncher;
-    private PendingIntent mTempSensorLauncher;
+    private ArrayList<PendingIntent> sensorsLauncher;
     private AlarmManager mAlarmManager;
 
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
@@ -41,10 +43,9 @@ public class SensorController implements SharedPreferences.OnSharedPreferenceCha
         }
         if (key.equals(PreferenceKeys.PREF_SENSOR_RATE.toString())) {
             if (sharedPreferences.getBoolean(PreferenceKeys.PREF_LIGHT_PERM.toString(), false)) {
-                mAlarmManager.cancel(mLightSensorLauncher);
-                Integer rate = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(mContext).getString(PreferenceKeys.PREF_SENSOR_RATE.toString(), "30"));
-                mAlarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 0, rate * 1000, mLightSensorLauncher);
-                Log.d("PREF", "Rate changed to: " + rate);
+                this.disableSensors();
+                this.startSensors();
+                Log.d("PREF", "Sensor polling rate changed");
             }
         }
         //TODO: Looking for multiple sensors
@@ -61,18 +62,9 @@ public class SensorController implements SharedPreferences.OnSharedPreferenceCha
 
     public SensorController(Activity context) {
         this.mContext = context;
-        //TODO: Looking for multiple sensors
-        //Set up the sensor listener
-        Intent mLightSensor = new Intent(mContext, SensorService.class);
-        mLightSensor.setAction(BroadcastTypes.BCAST_TYPE_SENSOR_LIGHT.toString());
-        mLightSensor.putExtra(BroadcastTypes.BCAST_EXTRA_SENSOR_TYPE.toString(), Sensor.TYPE_LIGHT);
-        mLightSensorLauncher = PendingIntent.getService(mContext, 0, mLightSensor, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        //OTHER SENSORS
-        Intent mTempSensor = new Intent(mContext, SensorService.class);
-        mTempSensor.setAction(BroadcastTypes.BCAST_TYPE_SENSOR_TEMP.toString());
-        mTempSensor.putExtra(BroadcastTypes.BCAST_EXTRA_SENSOR_TYPE.toString(), Sensor.TYPE_AMBIENT_TEMPERATURE);
-        mTempSensorLauncher = PendingIntent.getService(mContext, 1, mTempSensor, PendingIntent.FLAG_UPDATE_CURRENT);
+        //Get all sensors
+        this.getSensorLaunchers();
 
         //Get the alarm manager
         mAlarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
@@ -95,22 +87,67 @@ public class SensorController implements SharedPreferences.OnSharedPreferenceCha
         return mInstance;
     }
 
-    //TODO: Starting multiple sensors according to preferences
     public void startSensors() {
         //Set Alarm to launch the listener
         AccountController.getInstance(mContext).updateAccount();
-        mAlarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 0, Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(mContext).getString(PreferenceKeys.PREF_SENSOR_RATE.toString(), "30")) * 1000, mLightSensorLauncher);
-        mAlarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 0, Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(mContext).getString(PreferenceKeys.PREF_SENSOR_RATE.toString(), "30")) * 1000, mTempSensorLauncher);
+        for(PendingIntent sensorLauncher : sensorsLauncher){
+            mAlarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 0, Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(mContext).getString(PreferenceKeys.PREF_SENSOR_RATE.toString(), "30")) * 1000, sensorLauncher);
+        }
     }
 
-    //TODO: Disabling multiple sensors according to preferences
     public void disableSensors() {
         ((TextView) mContext.findViewById(R.id.sensors_display_light)).setText(R.string.sensors_light_disabled);
         ((TextView) mContext.findViewById(R.id.sensors_display_light_data)).setText("");
+        ((TextView) mContext.findViewById(R.id.sensors_display_temp)).setText(R.string.sensors_temp_disabled);
+        ((TextView) mContext.findViewById(R.id.sensors_display_temp_data)).setText("");
         ((TextView) mContext.findViewById(R.id.server_display_status)).setText(R.string.connection_no_data);
-        //Disable alarm
-        mAlarmManager.cancel(mLightSensorLauncher);
-        mAlarmManager.cancel(mTempSensorLauncher);
+        //Disable alarms
+        for(PendingIntent sensorLauncher : sensorsLauncher){
+            mAlarmManager.cancel(sensorLauncher);
+        }
+    }
+
+    public void getSensorLaunchers(){
+        sensorsLauncher = new ArrayList<PendingIntent>();
+        SensorManager sensorManager = (SensorManager) mContext.getSystemService(Context.SENSOR_SERVICE);
+        if (sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT) != null){
+            Intent sensorIntent = new Intent(mContext, SensorService.class);
+            sensorIntent.setAction(String.valueOf(Sensor.TYPE_LIGHT));
+            sensorsLauncher.add(PendingIntent.getService(mContext, 0, sensorIntent, PendingIntent.FLAG_UPDATE_CURRENT));
+        }
+        if (sensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE) != null){
+            Intent sensorIntent = new Intent(mContext, SensorService.class);
+            sensorIntent.setAction(String.valueOf(Sensor.TYPE_AMBIENT_TEMPERATURE));
+            sensorsLauncher.add(PendingIntent.getService(mContext, 1, sensorIntent, PendingIntent.FLAG_UPDATE_CURRENT));
+        }
+        if (sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE) != null){
+            Intent sensorIntent = new Intent(mContext, SensorService.class);
+            sensorIntent.setAction(String.valueOf(Sensor.TYPE_PRESSURE));
+            sensorsLauncher.add(PendingIntent.getService(mContext, 2, sensorIntent, PendingIntent.FLAG_UPDATE_CURRENT));
+        }
+        if (sensorManager.getDefaultSensor(Sensor.TYPE_RELATIVE_HUMIDITY) != null){
+            Intent sensorIntent = new Intent(mContext, SensorService.class);
+            sensorIntent.setAction(String.valueOf(Sensor.TYPE_RELATIVE_HUMIDITY));
+            sensorsLauncher.add(PendingIntent.getService(mContext, 3, sensorIntent, PendingIntent.FLAG_UPDATE_CURRENT));
+        }
+        if (sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY) != null){
+            Intent sensorIntent = new Intent(mContext, SensorService.class);
+            sensorIntent.setAction(String.valueOf(Sensor.TYPE_PROXIMITY));
+            sensorsLauncher.add(PendingIntent.getService(mContext, 4, sensorIntent, PendingIntent.FLAG_UPDATE_CURRENT));
+        }
+    }
+
+    public static String getStringType(int sensorType){
+        String stringType;
+        switch (sensorType){
+            case Sensor.TYPE_LIGHT: stringType = "LIGHT"; break;
+            case Sensor.TYPE_AMBIENT_TEMPERATURE: stringType = "TEMPERATURE"; break;
+            case Sensor.TYPE_PRESSURE: stringType = "PRESSURE"; break;
+            case Sensor.TYPE_RELATIVE_HUMIDITY: stringType = "HUMIDITY"; break;
+            case Sensor.TYPE_PROXIMITY: stringType = "PROXIMITY"; break;
+            default: stringType = "Undefined"; break;
+        }
+        return stringType;
     }
 
     public void setmContext(Activity context) {

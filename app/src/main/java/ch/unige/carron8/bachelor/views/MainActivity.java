@@ -2,6 +2,7 @@ package ch.unige.carron8.bachelor.views;
 
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.hardware.Sensor;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
@@ -78,8 +79,8 @@ public class MainActivity extends AppCompatActivity {
         //Reset the context on the sensor controller
         SensorController.getInstance(this).setmContext(this);
         //Register the Broadcast listener
-        IntentFilter filter = new IntentFilter(BroadcastTypes.BCAST_TYPE_SENSOR_LIGHT.toString());
-        filter.addAction(BroadcastTypes.BCAST_TYPE_SENSOR_TEMP.toString());
+        IntentFilter filter = new IntentFilter(String.valueOf(Sensor.TYPE_LIGHT));
+        filter.addAction(String.valueOf(Sensor.TYPE_AMBIENT_TEMPERATURE));
         filter.addAction(BroadcastTypes.BCAST_TYPE_SERVER_STATUS.toString());
         LocalBroadcastManager.getInstance(this).registerReceiver(uiReceiver, filter);
     }

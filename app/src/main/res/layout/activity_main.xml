@@ -40,7 +40,7 @@
 
         <TextView
             android:id="@+id/sensors_display_temp"
-            android:text="@string/sensors_light_disabled"
+            android:text="@string/sensors_temp_disabled"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 

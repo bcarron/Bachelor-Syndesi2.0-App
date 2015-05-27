@@ -27,21 +27,18 @@ public class SendDataTask extends AsyncTask<SensorEvent, Void, SensorEvent> {
         Float data = event.values[0];
 
         //Send data to server
-        if(event.sensor.getType() == Sensor.TYPE_LIGHT) {
-            RESTService.getInstance(mContext).sendData(data, BroadcastTypes.BCAST_TYPE_SENSOR_LIGHT.toString());
-        }else{
-            RESTService.getInstance(mContext).sendData(data, BroadcastTypes.BCAST_TYPE_SENSOR_TEMP.toString());
-        }
+        RESTService.getInstance(mContext).sendData(data, SensorController.getStringType(event.sensor.getType()));
 
         //Send broadcast to update the UI if the app is active
-        Intent localIntent = null;
+        /*Intent localIntent = null;
         if(event.sensor.getType() == Sensor.TYPE_LIGHT){
             localIntent = new Intent(BroadcastTypes.BCAST_TYPE_SENSOR_LIGHT.toString());
         } else if(event.sensor.getType() == Sensor.TYPE_AMBIENT_TEMPERATURE){
             localIntent = new Intent(BroadcastTypes.BCAST_TYPE_SENSOR_TEMP.toString());
         }else{
             Log.d("SENSOR","ERROR");
-        }
+        }*/
+        Intent localIntent = new Intent(String.valueOf(event.sensor.getType()));
         localIntent.putExtra(BroadcastTypes.BCAST_EXTRA_SENSOR_DATA.toString(), data);
         LocalBroadcastManager broadcastManager = LocalBroadcastManager.getInstance(mContext);
         broadcastManager.sendBroadcast(localIntent);

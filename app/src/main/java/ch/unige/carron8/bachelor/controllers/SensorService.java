@@ -4,11 +4,12 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
+import android.util.Log;
 
 import ch.unige.carron8.bachelor.models.BroadcastTypes;
 
 /**
- * Listens to sensors and prepare an AsyncTask to send data to the server and update the user interface.
+ * Prepares sensor listener for the right sensor.
  * Created by Blaise on 30.04.2015.
  */
 public class SensorService extends IntentService {
@@ -21,7 +22,8 @@ public class SensorService extends IntentService {
     @Override
     protected void onHandleIntent(Intent workIntent) {
         sensorManager = (SensorManager) getSystemService(this.SENSOR_SERVICE);
-        Sensor sensor = sensorManager.getDefaultSensor(workIntent.getIntExtra(BroadcastTypes.BCAST_EXTRA_SENSOR_TYPE.toString(), -1));
+        Log.d("SENSOR2", workIntent.getAction());
+        Sensor sensor = sensorManager.getDefaultSensor(Integer.parseInt(workIntent.getAction()));
         if (sensor != null) {
             sensorManager.registerListener(new SensorListener(getApplicationContext(), sensorManager), sensor, SensorManager.SENSOR_DELAY_NORMAL);
         }
