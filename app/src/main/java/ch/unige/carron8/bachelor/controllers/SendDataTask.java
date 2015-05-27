@@ -2,6 +2,7 @@ package ch.unige.carron8.bachelor.controllers;
 
 import android.content.Context;
 import android.content.Intent;
+import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.os.AsyncTask;
 import android.support.v4.content.LocalBroadcastManager;
@@ -24,13 +25,23 @@ public class SendDataTask extends AsyncTask<SensorEvent, Void, SensorEvent> {
     protected SensorEvent doInBackground(SensorEvent... params) {
         SensorEvent event = params[0];
         Float data = event.values[0];
-        Log.d("SENSOR", String.valueOf(data) + " lx");
 
         //Send data to server
-        RESTService.getInstance(mContext).sendData(data, BroadcastTypes.BCAST_TYPE_SENSOR_LIGHT.toString());
+        if(event.sensor.getType() == Sensor.TYPE_LIGHT) {
+            RESTService.getInstance(mContext).sendData(data, BroadcastTypes.BCAST_TYPE_SENSOR_LIGHT.toString());
+        }else{
+            RESTService.getInstance(mContext).sendData(data, BroadcastTypes.BCAST_TYPE_SENSOR_TEMP.toString());
+        }
 
         //Send broadcast to update the UI if the app is active
-        Intent localIntent = new Intent(BroadcastTypes.BCAST_TYPE_SENSOR_LIGHT.toString());
+        Intent localIntent = null;
+        if(event.sensor.getType() == Sensor.TYPE_LIGHT){
+            localIntent = new Intent(BroadcastTypes.BCAST_TYPE_SENSOR_LIGHT.toString());
+        } else if(event.sensor.getType() == Sensor.TYPE_AMBIENT_TEMPERATURE){
+            localIntent = new Intent(BroadcastTypes.BCAST_TYPE_SENSOR_TEMP.toString());
+        }else{
+            Log.d("SENSOR","ERROR");
+        }
         localIntent.putExtra(BroadcastTypes.BCAST_EXTRA_SENSOR_DATA.toString(), data);
         LocalBroadcastManager broadcastManager = LocalBroadcastManager.getInstance(mContext);
         broadcastManager.sendBroadcast(localIntent);

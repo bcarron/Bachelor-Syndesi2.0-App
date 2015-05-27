@@ -39,7 +39,7 @@
         </activity>
 
         <service
-            android:name=".controllers.SensorListener"
+            android:name=".controllers.SensorService"
             android:exported="false" />
     </application>
 

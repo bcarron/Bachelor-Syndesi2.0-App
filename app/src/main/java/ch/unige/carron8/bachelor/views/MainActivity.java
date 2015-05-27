@@ -79,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
         SensorController.getInstance(this).setmContext(this);
         //Register the Broadcast listener
         IntentFilter filter = new IntentFilter(BroadcastTypes.BCAST_TYPE_SENSOR_LIGHT.toString());
+        filter.addAction(BroadcastTypes.BCAST_TYPE_SENSOR_TEMP.toString());
         filter.addAction(BroadcastTypes.BCAST_TYPE_SERVER_STATUS.toString());
         LocalBroadcastManager.getInstance(this).registerReceiver(uiReceiver, filter);
     }

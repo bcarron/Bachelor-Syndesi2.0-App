@@ -23,6 +23,7 @@ public class SensorController implements SharedPreferences.OnSharedPreferenceCha
     private static SensorController mInstance;
     private Activity mContext;
     private PendingIntent mLightSensorLauncher;
+    private PendingIntent mTempSensorLauncher;
     private AlarmManager mAlarmManager;
 
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
@@ -62,9 +63,16 @@ public class SensorController implements SharedPreferences.OnSharedPreferenceCha
         this.mContext = context;
         //TODO: Looking for multiple sensors
         //Set up the sensor listener
-        Intent mLightSensor = new Intent(mContext, SensorListener.class);
+        Intent mLightSensor = new Intent(mContext, SensorService.class);
+        mLightSensor.setAction(BroadcastTypes.BCAST_TYPE_SENSOR_LIGHT.toString());
         mLightSensor.putExtra(BroadcastTypes.BCAST_EXTRA_SENSOR_TYPE.toString(), Sensor.TYPE_LIGHT);
         mLightSensorLauncher = PendingIntent.getService(mContext, 0, mLightSensor, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        //OTHER SENSORS
+        Intent mTempSensor = new Intent(mContext, SensorService.class);
+        mTempSensor.setAction(BroadcastTypes.BCAST_TYPE_SENSOR_TEMP.toString());
+        mTempSensor.putExtra(BroadcastTypes.BCAST_EXTRA_SENSOR_TYPE.toString(), Sensor.TYPE_AMBIENT_TEMPERATURE);
+        mTempSensorLauncher = PendingIntent.getService(mContext, 1, mTempSensor, PendingIntent.FLAG_UPDATE_CURRENT);
 
         //Get the alarm manager
         mAlarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
@@ -92,6 +100,7 @@ public class SensorController implements SharedPreferences.OnSharedPreferenceCha
         //Set Alarm to launch the listener
         AccountController.getInstance(mContext).updateAccount();
         mAlarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 0, Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(mContext).getString(PreferenceKeys.PREF_SENSOR_RATE.toString(), "30")) * 1000, mLightSensorLauncher);
+        mAlarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 0, Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(mContext).getString(PreferenceKeys.PREF_SENSOR_RATE.toString(), "30")) * 1000, mTempSensorLauncher);
     }
 
     //TODO: Disabling multiple sensors according to preferences
@@ -101,6 +110,7 @@ public class SensorController implements SharedPreferences.OnSharedPreferenceCha
         ((TextView) mContext.findViewById(R.id.server_display_status)).setText(R.string.connection_no_data);
         //Disable alarm
         mAlarmManager.cancel(mLightSensorLauncher);
+        mAlarmManager.cancel(mTempSensorLauncher);
     }
 
     public void setmContext(Activity context) {
