@@ -88,6 +88,7 @@ public class SensorController implements SharedPreferences.OnSharedPreferenceCha
     }
 
     public void startSensors() {
+        ((TextView) mContext.findViewById(R.id.sensors_status)).setText("");
         //Set Alarm to launch the listener
         AccountController.getInstance(mContext).updateAccount();
         for(PendingIntent sensorLauncher : sensorsLauncher){
@@ -96,10 +97,7 @@ public class SensorController implements SharedPreferences.OnSharedPreferenceCha
     }
 
     public void disableSensors() {
-        ((TextView) mContext.findViewById(R.id.sensors_display_light)).setText(R.string.sensors_light_disabled);
-        ((TextView) mContext.findViewById(R.id.sensors_display_light_data)).setText("");
-        ((TextView) mContext.findViewById(R.id.sensors_display_temp)).setText(R.string.sensors_temp_disabled);
-        ((TextView) mContext.findViewById(R.id.sensors_display_temp_data)).setText("");
+        ((TextView) mContext.findViewById(R.id.sensors_status)).setText(R.string.sensors_disabled);
         ((TextView) mContext.findViewById(R.id.server_display_status)).setText(R.string.connection_no_data);
         //Disable alarms
         for(PendingIntent sensorLauncher : sensorsLauncher){
@@ -145,6 +143,19 @@ public class SensorController implements SharedPreferences.OnSharedPreferenceCha
             case Sensor.TYPE_PRESSURE: stringType = "PRESSURE"; break;
             case Sensor.TYPE_RELATIVE_HUMIDITY: stringType = "HUMIDITY"; break;
             case Sensor.TYPE_PROXIMITY: stringType = "PROXIMITY"; break;
+            default: stringType = "Undefined"; break;
+        }
+        return stringType;
+    }
+
+    public static String getStringUnit(int sensorType){
+        String stringType;
+        switch (sensorType){
+            case Sensor.TYPE_LIGHT: stringType = "lx"; break;
+            case Sensor.TYPE_AMBIENT_TEMPERATURE: stringType = "°C"; break;
+            case Sensor.TYPE_PRESSURE: stringType = "hPa"; break;
+            case Sensor.TYPE_RELATIVE_HUMIDITY: stringType = "%"; break;
+            case Sensor.TYPE_PROXIMITY: stringType = "cm"; break;
             default: stringType = "Undefined"; break;
         }
         return stringType;

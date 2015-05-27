@@ -12,7 +12,14 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v7.widget.Toolbar;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import ch.unige.carron8.bachelor.R;
 import ch.unige.carron8.bachelor.controllers.AccountController;
@@ -27,6 +34,8 @@ import ch.unige.carron8.bachelor.models.PreferenceKeys;
  */
 public class MainActivity extends AppCompatActivity {
     private UIReceiver uiReceiver;
+    private List<HashMap<String, String>> sensorsListData;
+    SimpleAdapter sensorsListadapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +47,11 @@ public class MainActivity extends AppCompatActivity {
         //Set the toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        //Set the sensor list
+        ListView sensorsList = (ListView) findViewById(R.id.sensorsList);
+        sensorsListData = new ArrayList<HashMap<String, String>>();
+        sensorsListadapter = new SimpleAdapter(this, sensorsListData, R.layout.sensor_display, new String[] {"sensor_name", "sensor_data"}, new int[] {R.id.sensor_name, R.id.sensor_data});
+        sensorsList.setAdapter(sensorsListadapter);
 
         //Detect if an account is set
         if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(PreferenceKeys.PREF_SAVED_ACCOUNT.toString(), "").equals("")) {
@@ -51,6 +65,20 @@ public class MainActivity extends AppCompatActivity {
             PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).registerOnSharedPreferenceChangeListener(SensorController.getInstance(this));
             Log.d("ACCOUNT", AccountController.getInstance(getApplicationContext()).getGSON());
         }
+    }
+
+    public void addSensor(HashMap<String, String> sensorData){
+        Boolean sensorExist = false;
+        for(HashMap<String, String> data : sensorsListData){
+            if(data.get("sensor_name").equals(sensorData.get("sensor_name"))){
+                data.put("sensor_data",sensorData.get("sensor_data"));
+                sensorExist = true;
+            }
+        }
+        if(!sensorExist){
+            sensorsListData.add(sensorData);
+        }
+        sensorsListadapter.notifyDataSetChanged();
     }
 
     @Override
@@ -81,6 +109,9 @@ public class MainActivity extends AppCompatActivity {
         //Register the Broadcast listener
         IntentFilter filter = new IntentFilter(String.valueOf(Sensor.TYPE_LIGHT));
         filter.addAction(String.valueOf(Sensor.TYPE_AMBIENT_TEMPERATURE));
+        filter.addAction(String.valueOf(Sensor.TYPE_PRESSURE));
+        filter.addAction(String.valueOf(Sensor.TYPE_RELATIVE_HUMIDITY));
+        filter.addAction(String.valueOf(Sensor.TYPE_PROXIMITY));
         filter.addAction(BroadcastTypes.BCAST_TYPE_SERVER_STATUS.toString());
         LocalBroadcastManager.getInstance(this).registerReceiver(uiReceiver, filter);
     }
@@ -94,15 +125,13 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putString(String.valueOf(R.id.sensors_display_light), ((TextView) findViewById(R.id.sensors_display_light)).getText().toString());
-        outState.putString(String.valueOf(R.id.sensors_display_light_data), ((TextView) findViewById(R.id.sensors_display_light_data)).getText().toString());
+        outState.putString(String.valueOf(R.id.sensors_status), ((TextView) findViewById(R.id.sensors_status)).getText().toString());
         outState.putString(String.valueOf(R.id.server_display_status), ((TextView) findViewById(R.id.server_display_status)).getText().toString());
     }
 
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
-        ((TextView) findViewById(R.id.sensors_display_light)).setText(savedInstanceState.getString(String.valueOf(R.id.sensors_display_light)));
-        ((TextView) findViewById(R.id.sensors_display_light_data)).setText(savedInstanceState.getString(String.valueOf(R.id.sensors_display_light_data)));
+        ((TextView) findViewById(R.id.sensors_status)).setText(savedInstanceState.getString(String.valueOf(R.id.sensors_status)));
         ((TextView) findViewById(R.id.server_display_status)).setText(savedInstanceState.getString(String.valueOf(R.id.server_display_status)));
     }
 }
