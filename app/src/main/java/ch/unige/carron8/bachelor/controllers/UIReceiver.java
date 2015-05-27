@@ -47,8 +47,8 @@ public class UIReceiver extends BroadcastReceiver {
         }else{
             Float data = intent.getFloatExtra(BroadcastTypes.BCAST_EXTRA_SENSOR_DATA.toString(), 0);
             HashMap<String, String> dataDisplay = new HashMap<String, String>();
-            dataDisplay.put("sensor_name",SensorController.getStringType(Integer.valueOf(intent.getAction())));
-            dataDisplay.put("sensor_data",String.valueOf(data)+" "+SensorController.getStringUnit(Integer.valueOf(intent.getAction())));
+            dataDisplay.put("sensor_name",SensorList.getStringType(Integer.valueOf(intent.getAction())));
+            dataDisplay.put("sensor_data",String.valueOf(data)+" "+SensorList.getStringUnit(Integer.valueOf(intent.getAction())));
             mContext.addSensor(dataDisplay);
         }
     }

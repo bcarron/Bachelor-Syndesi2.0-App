@@ -27,7 +27,7 @@ public class SendDataTask extends AsyncTask<SensorEvent, Void, SensorEvent> {
         Float data = event.values[0];
 
         //Send data to server
-        RESTService.getInstance(mContext).sendData(data, SensorController.getStringType(event.sensor.getType()));
+        RESTService.getInstance(mContext).sendData(data, SensorList.getStringType(event.sensor.getType()));
 
         //Send broadcast to update the UI if the app is active
         /*Intent localIntent = null;

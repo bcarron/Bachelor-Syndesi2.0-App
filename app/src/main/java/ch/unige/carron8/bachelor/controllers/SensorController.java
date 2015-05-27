@@ -108,57 +108,13 @@ public class SensorController implements SharedPreferences.OnSharedPreferenceCha
     public void getSensorLaunchers(){
         sensorsLauncher = new ArrayList<PendingIntent>();
         SensorManager sensorManager = (SensorManager) mContext.getSystemService(Context.SENSOR_SERVICE);
-        if (sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT) != null){
-            Intent sensorIntent = new Intent(mContext, SensorService.class);
-            sensorIntent.setAction(String.valueOf(Sensor.TYPE_LIGHT));
-            sensorsLauncher.add(PendingIntent.getService(mContext, 0, sensorIntent, PendingIntent.FLAG_UPDATE_CURRENT));
+        for(Integer sensorType : SensorList.sensorUsed){
+            if (sensorManager.getDefaultSensor(sensorType) != null){
+                Intent sensorIntent = new Intent(mContext, SensorService.class);
+                sensorIntent.setAction(String.valueOf(sensorType));
+                sensorsLauncher.add(PendingIntent.getService(mContext, 0, sensorIntent, PendingIntent.FLAG_UPDATE_CURRENT));
+            }
         }
-        if (sensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE) != null){
-            Intent sensorIntent = new Intent(mContext, SensorService.class);
-            sensorIntent.setAction(String.valueOf(Sensor.TYPE_AMBIENT_TEMPERATURE));
-            sensorsLauncher.add(PendingIntent.getService(mContext, 1, sensorIntent, PendingIntent.FLAG_UPDATE_CURRENT));
-        }
-        if (sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE) != null){
-            Intent sensorIntent = new Intent(mContext, SensorService.class);
-            sensorIntent.setAction(String.valueOf(Sensor.TYPE_PRESSURE));
-            sensorsLauncher.add(PendingIntent.getService(mContext, 2, sensorIntent, PendingIntent.FLAG_UPDATE_CURRENT));
-        }
-        if (sensorManager.getDefaultSensor(Sensor.TYPE_RELATIVE_HUMIDITY) != null){
-            Intent sensorIntent = new Intent(mContext, SensorService.class);
-            sensorIntent.setAction(String.valueOf(Sensor.TYPE_RELATIVE_HUMIDITY));
-            sensorsLauncher.add(PendingIntent.getService(mContext, 3, sensorIntent, PendingIntent.FLAG_UPDATE_CURRENT));
-        }
-        if (sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY) != null){
-            Intent sensorIntent = new Intent(mContext, SensorService.class);
-            sensorIntent.setAction(String.valueOf(Sensor.TYPE_PROXIMITY));
-            sensorsLauncher.add(PendingIntent.getService(mContext, 4, sensorIntent, PendingIntent.FLAG_UPDATE_CURRENT));
-        }
-    }
-
-    public static String getStringType(int sensorType){
-        String stringType;
-        switch (sensorType){
-            case Sensor.TYPE_LIGHT: stringType = "LIGHT"; break;
-            case Sensor.TYPE_AMBIENT_TEMPERATURE: stringType = "TEMPERATURE"; break;
-            case Sensor.TYPE_PRESSURE: stringType = "PRESSURE"; break;
-            case Sensor.TYPE_RELATIVE_HUMIDITY: stringType = "HUMIDITY"; break;
-            case Sensor.TYPE_PROXIMITY: stringType = "PROXIMITY"; break;
-            default: stringType = "Undefined"; break;
-        }
-        return stringType;
-    }
-
-    public static String getStringUnit(int sensorType){
-        String stringType;
-        switch (sensorType){
-            case Sensor.TYPE_LIGHT: stringType = "lx"; break;
-            case Sensor.TYPE_AMBIENT_TEMPERATURE: stringType = "°C"; break;
-            case Sensor.TYPE_PRESSURE: stringType = "hPa"; break;
-            case Sensor.TYPE_RELATIVE_HUMIDITY: stringType = "%"; break;
-            case Sensor.TYPE_PROXIMITY: stringType = "cm"; break;
-            default: stringType = "Undefined"; break;
-        }
-        return stringType;
     }
 
     public void setmContext(Activity context) {
