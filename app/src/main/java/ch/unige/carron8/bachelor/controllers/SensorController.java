@@ -90,6 +90,7 @@ public class SensorController implements SharedPreferences.OnSharedPreferenceCha
     //TODO: Starting multiple sensors according to preferences
     public void startSensors() {
         //Set Alarm to launch the listener
+        AccountController.getInstance(mContext).updateAccount();
         mAlarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 0, Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(mContext).getString(PreferenceKeys.PREF_SENSOR_RATE.toString(), "30")) * 1000, mLightSensorLauncher);
     }
 

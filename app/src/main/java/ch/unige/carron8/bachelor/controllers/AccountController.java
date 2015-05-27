@@ -41,7 +41,7 @@ public class AccountController {
     }
 
     public void updateAccount() {
-        RESTService.getInstance(mContext).createAccount(this.getJSON());
+        RESTService.getInstance(mContext).updateAccount(this.getJSON());
     }
 
     public void createAccount(Account account) {
