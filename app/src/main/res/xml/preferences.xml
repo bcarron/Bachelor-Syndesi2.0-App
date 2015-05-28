@@ -9,13 +9,6 @@
             android:targetPackage="ch.unige.carron8.bachelor" />
     </Preference>
 
-    <EditTextPreference
-        android:defaultValue="200"
-        android:inputType="number"
-        android:key="PREF_LIGHT_THRESHOLD"
-        android:title="@string/pref_title_light_threshold"
-        android:dialogMessage="Set up the lux value at which you would like the lights to turn on" />
-
     <ListPreference
         android:defaultValue="5"
         android:entries="@array/pref_rate_titles"
@@ -39,5 +32,19 @@
         android:summaryOff="Sensors disabled"
         android:summaryOn="Sensors enabled"
         android:title="@string/pref_title_sensor_perm" />
+
+    <EditTextPreference
+        android:defaultValue="200"
+        android:inputType="number"
+        android:key="PREF_LIGHT_THRESHOLD"
+        android:title="@string/pref_title_light_threshold"
+        android:dialogMessage="Set up the lux value at which you would like the lights to turn on" />
+
+    <EditTextPreference
+        android:defaultValue="23"
+        android:inputType="number"
+        android:key="PREF_TEMP_TARGET"
+        android:title="@string/pref_title_temp_target"
+        android:dialogMessage="Set up the target ambient temperature in °C" />
 
 </PreferenceScreen>

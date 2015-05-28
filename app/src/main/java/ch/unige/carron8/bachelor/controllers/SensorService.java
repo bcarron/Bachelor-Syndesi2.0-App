@@ -22,7 +22,6 @@ public class SensorService extends IntentService {
     @Override
     protected void onHandleIntent(Intent workIntent) {
         sensorManager = (SensorManager) getSystemService(this.SENSOR_SERVICE);
-        Log.d("SENSOR2", workIntent.getAction());
         Sensor sensor = sensorManager.getDefaultSensor(Integer.parseInt(workIntent.getAction()));
         if (sensor != null) {
             sensorManager.registerListener(new SensorListener(getApplicationContext(), sensorManager), sensor, SensorManager.SENSOR_DELAY_NORMAL);

@@ -28,19 +28,7 @@ public class UIReceiver extends BroadcastReceiver {
     //TODO: Update the data of multiple sensors
     @Override
     public void onReceive(Context context, Intent intent) {
-        /*if (intent.getAction().equals(String.valueOf(Sensor.TYPE_LIGHT))) {
-            Float data = intent.getFloatExtra(BroadcastTypes.BCAST_EXTRA_SENSOR_DATA.toString(), 0);
-            HashMap<String, String> dataDisplay = new HashMap<String, String>();
-            dataDisplay.put("sensor_name","Light report:");
-            dataDisplay.put("sensor_data",String.valueOf(data) + " lx");
-            mContext.addSensor(dataDisplay);
-        }else if(intent.getAction().equals(String.valueOf(Sensor.TYPE_AMBIENT_TEMPERATURE))){
-            Float data = intent.getFloatExtra(BroadcastTypes.BCAST_EXTRA_SENSOR_DATA.toString(), 0);
-            HashMap<String, String> dataDisplay = new HashMap<String, String>();
-            dataDisplay.put("sensor_name","Temperature report:");
-            dataDisplay.put("sensor_data",String.valueOf(data) + " °C");
-            mContext.addSensor(dataDisplay);
-        }else*/ if (intent.getAction().equals(BroadcastTypes.BCAST_TYPE_SERVER_STATUS.toString())) {
+        if (intent.getAction().equals(BroadcastTypes.BCAST_TYPE_SERVER_STATUS.toString())) {
             String response = intent.getStringExtra(BroadcastTypes.BCAST_EXTRA_SERVER_RESPONSE.toString());
             TextView server = (TextView) mContext.findViewById(R.id.server_display_status);
             server.setText(response);

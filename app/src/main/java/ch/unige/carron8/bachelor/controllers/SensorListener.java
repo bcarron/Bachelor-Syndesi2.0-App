@@ -30,6 +30,8 @@ public class SensorListener implements SensorEventListener {
     public void onSensorChanged(SensorEvent sensorEvent) {
         AsyncTask sendData = new SendDataTask(mContext);
         sendData.execute(new SensorEvent[]{sensorEvent});
-        mSensorManager.unregisterListener(this);
+        if(sensorEvent.sensor.getType() != Sensor.TYPE_PROXIMITY) {
+            mSensorManager.unregisterListener(this);
+        }
     }
 }
