@@ -35,7 +35,10 @@
             android:id="@+id/sensor_list"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:choiceMode="none" >
+            android:choiceMode="none"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:clickable="false" >
         </ListView>
 
         <TextView
