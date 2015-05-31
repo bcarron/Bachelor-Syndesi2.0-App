@@ -19,4 +19,9 @@
     <string name="form_surname">Surname</string>
     <string name="form_office">Office Number</string>
     <string name="form_submit_button">Submit</string>
+
+    <string name="action_controller">Devices controller</string>
+    <string name="title_controller">Devices controller</string>
+    <string name="controller_light">Lights</string>
+    <string name="lights_disabled">No lights to control</string>
 </resources>

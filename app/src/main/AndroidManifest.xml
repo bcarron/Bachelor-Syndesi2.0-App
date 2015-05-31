@@ -37,6 +37,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".views.MainActivity" />
         </activity>
+        <activity
+            android:name=".views.ControllerActivity"
+            android:label="@string/title_controller"
+            android:parentActivityName=".views.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".views.MainActivity" />
+        </activity>
 
         <service
             android:name=".controllers.SensorService"
