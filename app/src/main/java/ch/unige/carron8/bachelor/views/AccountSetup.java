@@ -9,7 +9,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import ch.unige.carron8.bachelor.R;
-import ch.unige.carron8.bachelor.controllers.AccountController;
+import ch.unige.carron8.bachelor.controllers.account.AccountController;
 import ch.unige.carron8.bachelor.models.Account;
 
 /**

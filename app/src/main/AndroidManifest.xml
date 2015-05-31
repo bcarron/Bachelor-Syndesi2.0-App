@@ -47,7 +47,7 @@
         </activity>
 
         <service
-            android:name=".controllers.SensorService"
+            android:name=".controllers.sensor.SensorService"
             android:exported="false" />
     </application>
 

@@ -12,7 +12,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v7.widget.Toolbar;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
@@ -22,9 +21,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import ch.unige.carron8.bachelor.R;
-import ch.unige.carron8.bachelor.controllers.AccountController;
-import ch.unige.carron8.bachelor.controllers.SensorController;
-import ch.unige.carron8.bachelor.controllers.UIReceiver;
+import ch.unige.carron8.bachelor.controllers.account.AccountController;
+import ch.unige.carron8.bachelor.controllers.sensor.SensorController;
+import ch.unige.carron8.bachelor.controllers.ui.UIReceiver;
 import ch.unige.carron8.bachelor.models.BroadcastTypes;
 import ch.unige.carron8.bachelor.models.PreferenceKeys;
 
