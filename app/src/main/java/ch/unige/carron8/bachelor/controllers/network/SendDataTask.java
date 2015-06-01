@@ -7,7 +7,7 @@ import android.os.AsyncTask;
 import android.support.v4.content.LocalBroadcastManager;
 
 import ch.unige.carron8.bachelor.controllers.sensor.SensorList;
-import ch.unige.carron8.bachelor.models.BroadcastTypes;
+import ch.unige.carron8.bachelor.models.BroadcastType;
 
 /**
  * Sends data to the server and fire broadcast intents to update the user interface
@@ -38,7 +38,7 @@ public class SendDataTask extends AsyncTask<SensorEvent, Void, SensorEvent> {
             Log.d("SENSOR","ERROR");
         }*/
         Intent localIntent = new Intent(String.valueOf(event.sensor.getType()));
-        localIntent.putExtra(BroadcastTypes.BCAST_EXTRA_SENSOR_DATA.toString(), data);
+        localIntent.putExtra(BroadcastType.BCAST_EXTRA_SENSOR_DATA.toString(), data);
         LocalBroadcastManager broadcastManager = LocalBroadcastManager.getInstance(mContext);
         broadcastManager.sendBroadcast(localIntent);
 

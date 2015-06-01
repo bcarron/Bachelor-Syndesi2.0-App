@@ -1,18 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/sensor_name"
-        android:text="Sensor"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+    <ImageView
+        android:id="@+id/sensor_icon"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:src="@drawable/sensor"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp" />
 
-    <TextView
-        android:id="@+id/sensor_data"
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/accent" />
+        android:layout_height="match_parent" >
+
+        <TextView
+            android:id="@+id/sensor_label"
+            android:text="Sensor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/sensor_data"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/accent" />
+
+    </LinearLayout>
 
 </LinearLayout>

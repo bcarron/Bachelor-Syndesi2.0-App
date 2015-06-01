@@ -17,8 +17,8 @@ import org.json.JSONObject;
 
 import ch.unige.carron8.bachelor.R;
 import ch.unige.carron8.bachelor.controllers.account.AccountController;
-import ch.unige.carron8.bachelor.models.BroadcastTypes;
-import ch.unige.carron8.bachelor.models.PreferenceKeys;
+import ch.unige.carron8.bachelor.models.BroadcastType;
+import ch.unige.carron8.bachelor.models.PreferenceKey;
 
 /**
  * Implements a REST service in a singleton class to send data to the server
@@ -57,7 +57,7 @@ public class RESTService {
      * @param dataType the type of sensor used to collect the data
      */
     public void sendData(Float data, String dataType) {
-        String server_url = PreferenceManager.getDefaultSharedPreferences(mContext).getString(PreferenceKeys.PREF_SERVER_URL.toString(), "");
+        String server_url = PreferenceManager.getDefaultSharedPreferences(mContext).getString(PreferenceKey.PREF_SERVER_URL.toString(), "");
 
         if (!server_url.equals("")) {
             // Instantiate the RequestQueue.
@@ -98,7 +98,7 @@ public class RESTService {
      * @param account the account to create
      */
     public void createAccount(JSONObject account) {
-        String server_url = PreferenceManager.getDefaultSharedPreferences(mContext).getString(PreferenceKeys.PREF_SERVER_URL.toString(), "");
+        String server_url = PreferenceManager.getDefaultSharedPreferences(mContext).getString(PreferenceKey.PREF_SERVER_URL.toString(), "");
 
         if (!server_url.equals("")) {
             // Instantiate the RequestQueue.
@@ -135,7 +135,7 @@ public class RESTService {
      * @param account the account to update
      */
     public void updateAccount(JSONObject account) {
-        String server_url = PreferenceManager.getDefaultSharedPreferences(mContext).getString(PreferenceKeys.PREF_SERVER_URL.toString(), "");
+        String server_url = PreferenceManager.getDefaultSharedPreferences(mContext).getString(PreferenceKey.PREF_SERVER_URL.toString(), "");
 
         if (!server_url.equals("")) {
             // Instantiate the RequestQueue.
@@ -174,8 +174,8 @@ public class RESTService {
      */
     public static void sendServerStatusBcast(Context context, String status) {
         //Send broadcast to update the UI if the app is active
-        Intent localIntent = new Intent(BroadcastTypes.BCAST_TYPE_SERVER_STATUS.toString());
-        localIntent.putExtra(BroadcastTypes.BCAST_EXTRA_SERVER_RESPONSE.toString(), status);
+        Intent localIntent = new Intent(BroadcastType.BCAST_TYPE_SERVER_STATUS.toString());
+        localIntent.putExtra(BroadcastType.BCAST_EXTRA_SERVER_RESPONSE.toString(), status);
         LocalBroadcastManager.getInstance(context).sendBroadcast(localIntent);
     }
 }

@@ -11,7 +11,7 @@ import org.json.JSONObject;
 
 import ch.unige.carron8.bachelor.controllers.network.RESTService;
 import ch.unige.carron8.bachelor.models.Account;
-import ch.unige.carron8.bachelor.models.PreferenceKeys;
+import ch.unige.carron8.bachelor.models.PreferenceKey;
 import ch.unige.carron8.bachelor.models.SensorData;
 
 /**
@@ -67,17 +67,17 @@ public class AccountController {
     }
 
     public Account getAccount() {
-        return mGson.fromJson(mAccountPref.getString(PreferenceKeys.PREF_SAVED_ACCOUNT.toString(), ""), Account.class);
+        return mGson.fromJson(mAccountPref.getString(PreferenceKey.PREF_SAVED_ACCOUNT.toString(), ""), Account.class);
     }
 
     public String getGSON() {
-        return mAccountPref.getString(PreferenceKeys.PREF_SAVED_ACCOUNT.toString(), "");
+        return mAccountPref.getString(PreferenceKey.PREF_SAVED_ACCOUNT.toString(), "");
     }
 
     public JSONObject getJSON() {
         JSONObject JSONaccount = null;
         try {
-            JSONaccount = new JSONObject(mAccountPref.getString(PreferenceKeys.PREF_SAVED_ACCOUNT.toString(), ""));
+            JSONaccount = new JSONObject(mAccountPref.getString(PreferenceKey.PREF_SAVED_ACCOUNT.toString(), ""));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -86,17 +86,17 @@ public class AccountController {
     }
 
     public void setAccount(Account account) {
-        mAccountPrefEditor.putString(PreferenceKeys.PREF_SAVED_ACCOUNT.toString(), mGson.toJson(account));
+        mAccountPrefEditor.putString(PreferenceKey.PREF_SAVED_ACCOUNT.toString(), mGson.toJson(account));
         mAccountPrefEditor.commit();
     }
 
     public void setAccountGSON(String account) {
-        mAccountPrefEditor.putString(PreferenceKeys.PREF_SAVED_ACCOUNT.toString(), account);
+        mAccountPrefEditor.putString(PreferenceKey.PREF_SAVED_ACCOUNT.toString(), account);
         mAccountPrefEditor.commit();
     }
 
     public void setAccountJSON(JSONObject account) {
-        mAccountPrefEditor.putString(PreferenceKeys.PREF_SAVED_ACCOUNT.toString(), account.toString());
+        mAccountPrefEditor.putString(PreferenceKey.PREF_SAVED_ACCOUNT.toString(), account.toString());
         mAccountPrefEditor.commit();
     }
 }

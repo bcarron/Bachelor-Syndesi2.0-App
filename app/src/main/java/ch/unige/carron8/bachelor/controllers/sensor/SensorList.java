@@ -4,6 +4,8 @@ import android.hardware.Sensor;
 
 import java.util.ArrayList;
 
+import ch.unige.carron8.bachelor.R;
+
 /**
  * Created by Blaise on 27.05.2015.
  */
@@ -35,5 +37,18 @@ public class SensorList {
             default: stringType = "Undefined"; break;
         }
         return stringType;
+    }
+
+    public static int getIcon(int sensorType){
+        int icon;
+        switch (sensorType){
+            case Sensor.TYPE_LIGHT: icon = R.drawable.sensor_light; break;
+            case Sensor.TYPE_AMBIENT_TEMPERATURE: icon = R.drawable.sensor_temperature; break;
+            case Sensor.TYPE_PRESSURE: icon = R.drawable.sensor_pressure; break;
+            case Sensor.TYPE_RELATIVE_HUMIDITY: icon = R.drawable.sensor_humidity; break;
+            case Sensor.TYPE_PROXIMITY: icon = R.drawable.sensor_proximity; break;
+            default: icon = 0; break;
+        }
+        return icon;
     }
 }

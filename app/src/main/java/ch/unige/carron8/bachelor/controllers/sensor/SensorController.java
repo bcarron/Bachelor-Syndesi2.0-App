@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 import ch.unige.carron8.bachelor.R;
 import ch.unige.carron8.bachelor.controllers.account.AccountController;
-import ch.unige.carron8.bachelor.models.PreferenceKeys;
+import ch.unige.carron8.bachelor.models.PreferenceKey;
 import ch.unige.carron8.bachelor.views.MainActivity;
 
 /**
@@ -29,10 +29,10 @@ public class SensorController implements SharedPreferences.OnSharedPreferenceCha
     private AlarmManager mAlarmManager;
 
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.equals(PreferenceKeys.PREF_SERVER_URL.toString())) {
+        if (key.equals(PreferenceKey.PREF_SERVER_URL.toString())) {
             Log.d("PREF", "Server changed");
             final TextView connection = (TextView) mContext.findViewById(R.id.server_display_status);
-            String server_url = PreferenceManager.getDefaultSharedPreferences(mContext).getString(PreferenceKeys.PREF_SERVER_URL.toString(), "");
+            String server_url = PreferenceManager.getDefaultSharedPreferences(mContext).getString(PreferenceKey.PREF_SERVER_URL.toString(), "");
 
             if (server_url.equals("")) {
                 connection.setText(R.string.connection_no_server_set);
@@ -41,15 +41,15 @@ public class SensorController implements SharedPreferences.OnSharedPreferenceCha
                 Log.d("PREF", "User account updated");
             }
         }
-        if (key.equals(PreferenceKeys.PREF_SENSOR_RATE.toString())) {
-            if (sharedPreferences.getBoolean(PreferenceKeys.PREF_SENSOR_PERM.toString(), false)) {
+        if (key.equals(PreferenceKey.PREF_SENSOR_RATE.toString())) {
+            if (sharedPreferences.getBoolean(PreferenceKey.PREF_SENSOR_PERM.toString(), false)) {
                 this.disableSensors();
                 this.startSensors();
                 Log.d("PREF", "Sensor polling rate changed");
             }
         }
-        if (key.equals(PreferenceKeys.PREF_SENSOR_PERM.toString())) {
-            if (sharedPreferences.getBoolean(PreferenceKeys.PREF_SENSOR_PERM.toString(), false)) {
+        if (key.equals(PreferenceKey.PREF_SENSOR_PERM.toString())) {
+            if (sharedPreferences.getBoolean(PreferenceKey.PREF_SENSOR_PERM.toString(), false)) {
                 this.startSensors();
                 Log.d("PREF", "Sensors enabled");
             } else {
@@ -69,12 +69,12 @@ public class SensorController implements SharedPreferences.OnSharedPreferenceCha
         mAlarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
-        if (sharedPreferences.getBoolean(PreferenceKeys.PREF_SENSOR_PERM.toString(), false)) {
+        if (sharedPreferences.getBoolean(PreferenceKey.PREF_SENSOR_PERM.toString(), false)) {
             this.startSensors();
         } else {
             this.disableSensors();
         }
-        if (sharedPreferences.getString(PreferenceKeys.PREF_SERVER_URL.toString(), "").equals("")) {
+        if (sharedPreferences.getString(PreferenceKey.PREF_SERVER_URL.toString(), "").equals("")) {
             ((TextView) mContext.findViewById(R.id.server_display_status)).setText(R.string.connection_no_server_set);
         }
     }
@@ -91,7 +91,7 @@ public class SensorController implements SharedPreferences.OnSharedPreferenceCha
         //Set Alarm to launch the listener
         AccountController.getInstance(mContext).updateAccount();
         for(PendingIntent sensorLauncher : sensorsLauncher){
-            mAlarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 0, Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(mContext).getString(PreferenceKeys.PREF_SENSOR_RATE.toString(), "30")) * 1000, sensorLauncher);
+            mAlarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 0, Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(mContext).getString(PreferenceKey.PREF_SENSOR_RATE.toString(), "30")) * 1000, sensorLauncher);
         }
     }
 
