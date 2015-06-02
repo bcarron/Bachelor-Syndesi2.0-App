@@ -8,7 +8,7 @@
         android:id="@+id/node_icon"
         android:layout_width="36dp"
         android:layout_height="36dp"
-        android:src="@drawable/node_bulb_off"
+        android:src="@drawable/sensor"
         android:paddingTop="2dp"
         android:paddingBottom="2dp" />
 
@@ -19,7 +19,6 @@
 
         <TextView
             android:id="@+id/node_label"
-            android:text="Sensor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 

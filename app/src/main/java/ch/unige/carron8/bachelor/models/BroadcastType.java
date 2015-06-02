@@ -6,6 +6,7 @@ package ch.unige.carron8.bachelor.models;
  */
 public enum BroadcastType {
     BCAST_TYPE_SERVER_STATUS,
+    BCAST_TYPE_CONTROLLER_STATUS,
     BCAST_TYPE_SENSOR_LIGHT,
     BCAST_TYPE_SENSOR_TEMP,
     BCAST_EXTRA_SERVER_RESPONSE,

@@ -22,12 +22,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/controller_light"
+            android:text="@string/controller_node"
             android:elevation="2dp" />
 
         <TextView
-            android:id="@+id/nodes_status"
-            android:text="@string/lights_disabled"
+            android:id="@+id/controller_display_status"
+            android:text="@string/controller_no_nodes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 

@@ -1,5 +1,6 @@
 package ch.unige.carron8.bachelor.controllers.ui;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -18,9 +19,9 @@ import ch.unige.carron8.bachelor.views.MainActivity;
  * Created by Blaise on 01.05.2015.
  */
 public class UIReceiver extends BroadcastReceiver {
-    private MainActivity mContext;
+    private Activity mContext;
 
-    public UIReceiver(MainActivity context) {
+    public UIReceiver(Activity context) {
         mContext = context;
     }
 
@@ -31,9 +32,13 @@ public class UIReceiver extends BroadcastReceiver {
             String response = intent.getStringExtra(BroadcastType.BCAST_EXTRA_SERVER_RESPONSE.toString());
             TextView server = (TextView) mContext.findViewById(R.id.server_display_status);
             server.setText(response);
+        }else if (intent.getAction().equals(BroadcastType.BCAST_TYPE_CONTROLLER_STATUS.toString())) {
+            String response = intent.getStringExtra(BroadcastType.BCAST_EXTRA_SERVER_RESPONSE.toString());
+            TextView server = (TextView) mContext.findViewById(R.id.controller_display_status);
+            server.setText(response);
         }else{
             Float data = intent.getFloatExtra(BroadcastType.BCAST_EXTRA_SENSOR_DATA.toString(), 0);
-            mContext.addSensor(new SensorData(0, data, intent.getAction()));
+            ((MainActivity)mContext).addSensor(new SensorData(0, data, intent.getAction()));
         }
     }
 }

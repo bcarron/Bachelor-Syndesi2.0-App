@@ -30,10 +30,10 @@ public sensorAdapter(Context context, ArrayList<SensorData> sensorsList) {
 @Override
 public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View nodeView = inflater.inflate(R.layout.sensor_display, parent, false);
-        TextView label = (TextView) nodeView.findViewById(R.id.sensor_label);
-        TextView status = (TextView) nodeView.findViewById(R.id.sensor_data);
-        ImageView image = (ImageView) nodeView.findViewById(R.id.sensor_icon);
+        View nodeView = inflater.inflate(R.layout.node_display, parent, false);
+        TextView label = (TextView) nodeView.findViewById(R.id.node_label);
+        TextView status = (TextView) nodeView.findViewById(R.id.node_status);
+        ImageView image = (ImageView) nodeView.findViewById(R.id.node_icon);
 
         SensorData sensor = mSensorsList.get(position);
         label.setText(SensorList.getStringType(Integer.parseInt(sensor.getmDataType())));
