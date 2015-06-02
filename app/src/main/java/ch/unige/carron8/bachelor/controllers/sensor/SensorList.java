@@ -47,6 +47,7 @@ public class SensorList {
             case Sensor.TYPE_PRESSURE: icon = R.drawable.sensor_pressure; break;
             case Sensor.TYPE_RELATIVE_HUMIDITY: icon = R.drawable.sensor_humidity; break;
             case Sensor.TYPE_PROXIMITY: icon = R.drawable.sensor_proximity; break;
+            case Sensor.TYPE_ACCELEROMETER: icon = R.drawable.sensor; break;
             default: icon = 0; break;
         }
         return icon;

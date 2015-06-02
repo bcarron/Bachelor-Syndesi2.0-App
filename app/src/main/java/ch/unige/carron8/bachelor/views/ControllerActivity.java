@@ -7,6 +7,8 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -25,8 +27,9 @@ import ch.unige.carron8.bachelor.models.DeviceNode;
  */
 public class ControllerActivity extends AppCompatActivity{
     private UIReceiver uiReceiver;
+    private RESTService restService;
     private ArrayList<DeviceNode> mNodeList;
-    NodeAdapter nodeAdapter;
+    private NodeAdapter nodeAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,15 +42,30 @@ public class ControllerActivity extends AppCompatActivity{
         //Creates the broadcast receiver that updates the UI
         uiReceiver = new UIReceiver(this);
         //Set the sensor list
-        ListView lightsList = (ListView) findViewById(R.id.nodes_list);
+        final ListView listView = (ListView) findViewById(R.id.nodes_list);
         mNodeList = new ArrayList<>();
         nodeAdapter = new NodeAdapter(this, mNodeList);
-        lightsList.setAdapter(nodeAdapter);
+        listView.setAdapter(nodeAdapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                DeviceNode node = (DeviceNode)listView.getAdapter().getItem(position);
+                RESTService.getInstance(getApplicationContext()).toggleNode(node);
+            }
+        });
     }
 
-    public void addNodes(ArrayList<DeviceNode> nodeList){
-        Log.d("XML",String.valueOf(nodeList.size()));
-        mNodeList.addAll(nodeList);
+    public void addNode(DeviceNode node){
+        Boolean nodeExist = false;
+        for(DeviceNode currentNode : mNodeList){
+            if(currentNode.getmNID().equals(node.getmNID())) {
+                currentNode.setmStatus(node.getmStatus());
+                nodeExist = true;
+            }
+        }
+        if(!nodeExist){
+            mNodeList.add(node);
+        }
         nodeAdapter.notifyDataSetChanged();
         ((TextView) findViewById(R.id.controller_display_status)).setText("");
     }

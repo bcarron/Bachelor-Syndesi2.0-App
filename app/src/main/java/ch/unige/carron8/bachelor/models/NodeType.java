@@ -9,7 +9,7 @@ public enum NodeType {
     bulb{
         @Override
         public int getIcon(String status){
-            if(status.equals("on")){
+            if(status.equals("ON")){
                 return R.drawable.node_bulb_on;
             }else{
                 return R.drawable.node_bulb_off;
@@ -19,13 +19,17 @@ public enum NodeType {
     light{
         @Override
         public int getIcon(String status){
-            return R.drawable.sensor_light;
+            if(status.equals("ON")){
+                return R.drawable.node_light_on;
+            }else{
+                return R.drawable.node_light_off;
+            }
         }
     },
     curtain{
         @Override
         public int getIcon(String status){
-            if(status.equals("on")){
+            if(status.equals("UP")){
                 return R.drawable.node_curtain_on;
             }else{
                 return R.drawable.node_curtain_off;

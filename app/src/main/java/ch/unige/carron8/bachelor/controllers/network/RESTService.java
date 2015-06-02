@@ -87,7 +87,7 @@ public class RESTService {
             JSONObject dataJSON = mAccountController.formatDataJSON(data, dataType);
 
             // Request a string response from the provided URL.
-            JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, url, dataJSON,
+            JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, dataJSON,
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
@@ -104,7 +104,7 @@ public class RESTService {
                 }
             });
 
-            mRequestQueue.add(jsonRequest);
+            mRequestQueue.add(request);
         } else {
             RESTService.sendServerStatusBcast(mContext, mContext.getString(R.string.connection_no_server_set));
         }
@@ -126,7 +126,7 @@ public class RESTService {
             final String url = server_url + "/crowdusers";
 
             //Initiate the JSON request
-            JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, url, account,
+            JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, account,
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
@@ -141,7 +141,7 @@ public class RESTService {
                 }
             });
 
-            mRequestQueue.add(jsonRequest);
+            mRequestQueue.add(request);
         } else {
             RESTService.sendServerStatusBcast(mContext, mContext.getString(R.string.connection_no_server_set));
         }
@@ -163,7 +163,7 @@ public class RESTService {
             final String url = server_url + "/crowdusers";
 
             //Initiate the JSON request
-            JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.PUT, url, account,
+            JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, url, account,
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
@@ -178,14 +178,13 @@ public class RESTService {
                 }
             });
 
-            mRequestQueue.add(jsonRequest);
+            mRequestQueue.add(request);
         } else {
             RESTService.sendServerStatusBcast(mContext, mContext.getString(R.string.connection_no_server_set));
         }
     }
 
     public void fetchNodes(){
-        final ArrayList<DeviceNode> nodeList = new ArrayList<>();
         String server_url = PreferenceManager.getDefaultSharedPreferences(mContext).getString(PreferenceKey.PREF_SERVER_URL.toString(), "");
         //TESTING URL
         server_url = "http://129.194.70.52:8111/ero2proxy";
@@ -197,7 +196,7 @@ public class RESTService {
             }
             final String url = server_url + "/service/type/xml_rspec";
 
-            StringRequest jsonRequest = new StringRequest(Request.Method.GET, url,
+            StringRequest request = new StringRequest(Request.Method.GET, url,
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
@@ -214,14 +213,13 @@ public class RESTService {
                                     Element e = (Element) n.getFirstChild();
                                     String device = e.getAttribute("name");
                                     if (device.contains("bulb")) {
-                                        nodeList.add(new DeviceNode(device.substring(device.indexOf("NID: "), device.length()), NodeType.bulb, "Off"));
+                                        ((ControllerActivity) mContext).addNode(new DeviceNode(device.substring(device.indexOf("NID: ")+5, device.length()), NodeType.bulb, "OFF"));
                                     } else if (device.contains("curtain")) {
-                                        nodeList.add(new DeviceNode(device.substring(device.indexOf("NID: "), device.length()), NodeType.curtain, "Off"));
+                                        ((ControllerActivity) mContext).addNode(new DeviceNode(device.substring(device.indexOf("NID: ")+5, device.length()), NodeType.curtain, "DOWN"));
                                     } else if (device.contains("light")) {
-                                        nodeList.add(new DeviceNode(device.substring(device.indexOf("NID: "), device.length()), NodeType.light, "On"));
+                                        ((ControllerActivity) mContext).addNode(new DeviceNode(device.substring(device.indexOf("NID: ")+5, device.length()), NodeType.light, "OFF"));
                                     }
                                 }
-                                ((ControllerActivity) mContext).addNodes(nodeList);
                             } catch (ParserConfigurationException e) {
                                 e.printStackTrace();
                             } catch (SAXException e) {
@@ -238,7 +236,66 @@ public class RESTService {
                 }
             });
 
-            mRequestQueue.add(jsonRequest);
+            mRequestQueue.add(request);
+        }else {
+            RESTService.sendControllerStatusBcast(mContext, mContext.getString(R.string.connection_no_server_set));
+        }
+    }
+
+    public void toggleNode(final DeviceNode node){
+        final ArrayList<DeviceNode> nodeList = new ArrayList<>();
+        String server_url = PreferenceManager.getDefaultSharedPreferences(mContext).getString(PreferenceKey.PREF_SERVER_URL.toString(), "");
+        //TESTING URL
+        server_url = "http://129.194.70.52:8111/ero2proxy";
+
+        if (!server_url.equals("")) {
+            // Instantiate the RequestQueue.
+            if (server_url.length() > 7 && !server_url.substring(0, 7).equals("http://")) {
+                server_url = "http://" + server_url;
+            }
+            server_url += "/mediate?service="+node.getmNID()+"&resource="+node.getmType();
+            if(node.getmStatus().equals("ON")){
+                server_url += "&status=off";
+            }else if(node.getmStatus().equals("OFF")){
+                server_url += "&status=on";
+            }else if(node.getmStatus().equals("UP")){
+                server_url += "&status=down";
+            }else if(node.getmStatus().equals("DOWN")){
+                server_url += "&status=up";
+            }
+
+            final String url = server_url;
+
+            StringRequest request = new StringRequest(Request.Method.GET, url,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            Log.d("HTTP", response);
+                            if(response.equals("ERROR")){
+                                RESTService.sendControllerStatusBcast(mContext, "Error connecting to the node");
+                            }else{
+                                if(response.contains("ON")) {
+                                    ((ControllerActivity)mContext).addNode(new DeviceNode(node.getmNID(), node.getmType(), "ON"));
+                                }else if(response.contains("OFF")){
+                                    ((ControllerActivity)mContext).addNode(new DeviceNode(node.getmNID(), node.getmType(), "OFF"));
+                                }else if(response.contains("UP")){
+                                    ((ControllerActivity)mContext).addNode(new DeviceNode(node.getmNID(), node.getmType(), "UP"));
+                                }else if(response.contains("DOWN")){
+                                    ((ControllerActivity)mContext).addNode(new DeviceNode(node.getmNID(), node.getmType(), "DOWN"));
+                                }else if(response.contains("li")){
+                                    ((ControllerActivity)mContext).addNode(new DeviceNode(node.getmNID(), node.getmType(), "ON"));
+                                }
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.d("HTTP", "Error connecting to server address " + url);
+                    RESTService.sendControllerStatusBcast(mContext, mContext.getString(R.string.connection_error) + ": " + url);
+                }
+            });
+
+            mRequestQueue.add(request);
         }else {
             RESTService.sendControllerStatusBcast(mContext, mContext.getString(R.string.connection_no_server_set));
         }
