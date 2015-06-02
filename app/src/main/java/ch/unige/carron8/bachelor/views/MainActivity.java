@@ -13,12 +13,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v7.widget.Toolbar;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 import ch.unige.carron8.bachelor.R;
 import ch.unige.carron8.bachelor.controllers.account.AccountController;
