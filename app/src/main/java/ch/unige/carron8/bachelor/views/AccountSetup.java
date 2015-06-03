@@ -41,6 +41,8 @@ public class AccountSetup extends AppCompatActivity {
             ((EditText) findViewById(R.id.name)).setText(account.getmName());
             ((EditText) findViewById(R.id.surname)).setText(account.getmSurname());
             ((EditText) findViewById(R.id.office)).setText(account.getmOffice());
+            ((EditText) findViewById(R.id.light_target)).setText(String.valueOf(account.getmTargetLight()));
+            ((EditText) findViewById(R.id.temp_target)).setText(String.valueOf(account.getmTargetTemp()));
         }
     }
 

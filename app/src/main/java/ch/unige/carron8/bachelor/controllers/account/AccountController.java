@@ -3,6 +3,7 @@ package ch.unige.carron8.bachelor.controllers.account;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.google.gson.Gson;
 
