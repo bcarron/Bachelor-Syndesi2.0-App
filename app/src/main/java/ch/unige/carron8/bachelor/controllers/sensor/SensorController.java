@@ -15,6 +15,7 @@ import java.util.ArrayList;
 
 import ch.unige.carron8.bachelor.R;
 import ch.unige.carron8.bachelor.controllers.account.AccountController;
+import ch.unige.carron8.bachelor.models.Account;
 import ch.unige.carron8.bachelor.models.PreferenceKey;
 import ch.unige.carron8.bachelor.views.MainActivity;
 
@@ -44,13 +45,13 @@ public class SensorController implements SharedPreferences.OnSharedPreferenceCha
         if (key.equals(PreferenceKey.PREF_SENSOR_RATE.toString())) {
             if (sharedPreferences.getBoolean(PreferenceKey.PREF_SENSOR_PERM.toString(), false)) {
                 this.disableSensors();
-                this.startSensors();
+                this.enableSensors();
                 Log.d("PREF", "Sensor polling rate changed");
             }
         }
         if (key.equals(PreferenceKey.PREF_SENSOR_PERM.toString())) {
             if (sharedPreferences.getBoolean(PreferenceKey.PREF_SENSOR_PERM.toString(), false)) {
-                this.startSensors();
+                this.enableSensors();
                 Log.d("PREF", "Sensors enabled");
             } else {
                 this.disableSensors();
@@ -70,7 +71,7 @@ public class SensorController implements SharedPreferences.OnSharedPreferenceCha
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
         if (sharedPreferences.getBoolean(PreferenceKey.PREF_SENSOR_PERM.toString(), false)) {
-            this.startSensors();
+            this.enableSensors();
         } else {
             this.disableSensors();
         }
@@ -86,7 +87,7 @@ public class SensorController implements SharedPreferences.OnSharedPreferenceCha
         return mInstance;
     }
 
-    public void startSensors() {
+    public void enableSensors() {
         ((TextView) mContext.findViewById(R.id.sensors_status)).setText("");
         //Set Alarm to launch the listener
         AccountController.getInstance(mContext).updateAccount();
@@ -108,13 +109,18 @@ public class SensorController implements SharedPreferences.OnSharedPreferenceCha
     public void getSensorLaunchers(){
         sensorsLauncher = new ArrayList<PendingIntent>();
         SensorManager sensorManager = (SensorManager) mContext.getSystemService(Context.SENSOR_SERVICE);
+        ArrayList<String> availableSensors = new ArrayList<>();
         for(Integer sensorType : SensorList.sensorUsed){
             if (sensorManager.getDefaultSensor(sensorType) != null){
                 Intent sensorIntent = new Intent(mContext, SensorService.class);
                 sensorIntent.setAction(String.valueOf(sensorType));
                 sensorsLauncher.add(PendingIntent.getService(mContext, 0, sensorIntent, PendingIntent.FLAG_UPDATE_CURRENT));
+                availableSensors.add(SensorList.getStringType(sensorType));
             }
         }
+        Account account = AccountController.getInstance(mContext).getAccount();
+        account.setmAvailableSensors(availableSensors);
+        AccountController.getInstance(mContext).saveAccount(account);
     }
 
     public void setmContext(Activity context) {

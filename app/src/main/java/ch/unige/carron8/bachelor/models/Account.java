@@ -1,5 +1,7 @@
 package ch.unige.carron8.bachelor.models;
 
+import java.util.ArrayList;
+
 /**
  * Represents the active user's account
  * Created by Blaise on 30.04.2015.
@@ -11,10 +13,7 @@ public class Account {
     private String mOffice;
     private int mTargetLight;
     private int mTargetTemp;
-    private String[] mAvailableSensors;
-
-    public Account() {
-    }
+    private ArrayList<String> mAvailableSensors;
 
     public Account(String name, String surname, String office, int targetLight, int targetTemp) {
         this.mName = name;
@@ -23,6 +22,7 @@ public class Account {
         this.mTargetLight = targetLight;
         this.mTargetTemp = targetTemp;
         this.mId = 0; //Local id before sending account to the server
+        mAvailableSensors = new ArrayList<String>();
     }
 
     public void updateAccount(String name, String surname, String office, int targetLight, int targetTemp) {
@@ -77,11 +77,11 @@ public class Account {
         this.mTargetTemp = mTargetTemp;
     }
 
-    public String[] getmAvailableSensors() {
+    public ArrayList<String> getmAvailableSensors() {
         return mAvailableSensors;
     }
 
-    public void setmAvailableSensors(String[] mAvailableSensors) {
+    public void setmAvailableSensors(ArrayList<String> mAvailableSensors) {
         this.mAvailableSensors = mAvailableSensors;
     }
 }

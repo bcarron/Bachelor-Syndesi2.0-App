@@ -78,7 +78,9 @@ public class AccountSetup extends AppCompatActivity {
                 startActivity(intent);
             } else {
                 //Update account
-                AccountController.getInstance(getApplicationContext()).saveAccount(account);
+                Account oldAccount = AccountController.getInstance(this).getAccount();
+                oldAccount.updateAccount(account.getmName(),account.getmSurname(),account.getmOffice(),account.getmTargetLight(),account.getmTargetTemp());
+                AccountController.getInstance(getApplicationContext()).saveAccount(oldAccount);
                 Toast.makeText(this, R.string.account_setup_acc_updated, Toast.LENGTH_LONG).show();
                 startActivity(intent);
             }

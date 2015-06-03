@@ -97,6 +97,7 @@ public class AccountController {
     }
 
     public void setAccountJSON(JSONObject account) {
+        Log.d("ACCOUNT3", account.toString());
         mAccountPrefEditor.putString(PreferenceKey.PREF_SAVED_ACCOUNT.toString(), account.toString());
         mAccountPrefEditor.commit();
     }
