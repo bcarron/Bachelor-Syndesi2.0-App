@@ -56,14 +56,18 @@ public class AccountSetup extends AppCompatActivity {
         EditText nameText = (EditText) findViewById(R.id.name);
         EditText surnameText = (EditText) findViewById(R.id.surname);
         EditText officeText = (EditText) findViewById(R.id.office);
+        EditText lightText = (EditText) findViewById(R.id.light_target);
+        EditText tempText = (EditText) findViewById(R.id.temp_target);
         String name = nameText.getText().toString();
         String surname = surnameText.getText().toString();
         String office = officeText.getText().toString();
+        String targetLight = lightText.getText().toString();
+        String targetTemp = tempText.getText().toString();
 
-        if (name.equals("") || surname.equals("") || office.equals("")) {
+        if (name.equals("") || surname.equals("") || office.equals("") || targetLight.equals("") || targetTemp.equals("")) {
             Toast.makeText(this, R.string.account_setup_empty_fields, Toast.LENGTH_LONG).show();
         } else {
-            Account account = new Account(name, surname, office);
+            Account account = new Account(name, surname, office, Integer.parseInt(targetLight), Integer.parseInt(targetTemp));
 
             if (mAccountController.getAccount() == null) {
                 //Save account

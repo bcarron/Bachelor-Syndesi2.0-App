@@ -17,7 +17,9 @@
     <string name="account_setup_acc_updated">Account updated</string>
     <string name="form_name">Name</string>
     <string name="form_surname">Surname</string>
-    <string name="form_office">Office Number</string>
+    <string name="form_office">Office number</string>
+    <string name="form_light_target">Preferred light level</string>
+    <string name="form_temp_target">Preferred temperature</string>
     <string name="form_submit_button">Submit</string>
 
     <string name="action_controller">Nodes controller</string>

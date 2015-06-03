@@ -41,6 +41,20 @@
             android:layout_height="wrap_content"
             android:hint="@string/form_office" />
 
+        <EditText
+            android:id="@+id/light_target"
+            android:inputType="number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/form_light_target" />
+
+        <EditText
+            android:id="@+id/temp_target"
+            android:inputType="number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/form_temp_target" />
+
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
