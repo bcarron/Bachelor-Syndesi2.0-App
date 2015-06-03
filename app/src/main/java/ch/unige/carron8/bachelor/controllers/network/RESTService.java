@@ -212,13 +212,8 @@ public class RESTService {
                                     Node n = nl.item(i);
                                     Element e = (Element) n.getFirstChild();
                                     String device = e.getAttribute("name");
-                                    if (device.contains("bulb")) {
-                                        ((ControllerActivity) mContext).addNode(new DeviceNode(device.substring(device.indexOf("NID: ")+5, device.length()), NodeType.bulb, "OFF"));
-                                    } else if (device.contains("curtain")) {
-                                        ((ControllerActivity) mContext).addNode(new DeviceNode(device.substring(device.indexOf("NID: ")+5, device.length()), NodeType.curtain, "DOWN"));
-                                    } else if (device.contains("light")) {
-                                        ((ControllerActivity) mContext).addNode(new DeviceNode(device.substring(device.indexOf("NID: ")+5, device.length()), NodeType.light, "OFF"));
-                                    }
+                                    NodeType nodeType = NodeType.getType(device);
+                                    ((ControllerActivity) mContext).addNode(new DeviceNode(device.substring(device.indexOf("NID: ")+5, device.length()), nodeType, nodeType.getStatus("default")));
                                 }
                             } catch (ParserConfigurationException e) {
                                 e.printStackTrace();
@@ -253,16 +248,7 @@ public class RESTService {
             if (server_url.length() > 7 && !server_url.substring(0, 7).equals("http://")) {
                 server_url = "http://" + server_url;
             }
-            server_url += "/mediate?service="+node.getmNID()+"&resource="+node.getmType();
-            if(node.getmStatus().equals("ON")){
-                server_url += "&status=off";
-            }else if(node.getmStatus().equals("OFF")){
-                server_url += "&status=on";
-            }else if(node.getmStatus().equals("UP")){
-                server_url += "&status=down";
-            }else if(node.getmStatus().equals("DOWN")){
-                server_url += "&status=up";
-            }
+            server_url += "/mediate?service="+node.getmNID()+"&resource="+node.getmType()+"&status="+node.getmType().getToggleStatus(node.getmStatus());
 
             final String url = server_url;
 
@@ -274,17 +260,7 @@ public class RESTService {
                             if(response.equals("ERROR")){
                                 RESTService.sendControllerStatusBcast(mContext, "Error connecting to the node");
                             }else{
-                                if(response.contains("ON")) {
-                                    ((ControllerActivity)mContext).addNode(new DeviceNode(node.getmNID(), node.getmType(), "ON"));
-                                }else if(response.contains("OFF")){
-                                    ((ControllerActivity)mContext).addNode(new DeviceNode(node.getmNID(), node.getmType(), "OFF"));
-                                }else if(response.contains("UP")){
-                                    ((ControllerActivity)mContext).addNode(new DeviceNode(node.getmNID(), node.getmType(), "UP"));
-                                }else if(response.contains("DOWN")){
-                                    ((ControllerActivity)mContext).addNode(new DeviceNode(node.getmNID(), node.getmType(), "DOWN"));
-                                }else if(response.contains("li")){
-                                    ((ControllerActivity)mContext).addNode(new DeviceNode(node.getmNID(), node.getmType(), "ON"));
-                                }
+                                ((ControllerActivity)mContext).addNode(new DeviceNode(node.getmNID(), node.getmType(), NodeType.parseResponse(response)));
                             }
                         }
                     }, new Response.ErrorListener() {
