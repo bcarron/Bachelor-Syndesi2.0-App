@@ -25,5 +25,5 @@
     <string name="action_controller">Nodes controller</string>
     <string name="title_controller">Nodes controller</string>
     <string name="controller_node">Nodes</string>
-    <string name="controller_no_nodes">No nodes to control on the server</string>
+    <string name="controller_no_nodes">No nodes detected on the server</string>
 </resources>

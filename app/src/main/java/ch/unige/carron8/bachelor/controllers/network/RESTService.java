@@ -93,7 +93,7 @@ public class RESTService {
                         public void onResponse(JSONObject response) {
                             Log.d("HTTP", response.toString());
                             //Send broadcast to update the UI if the app is active
-                            RESTService.sendServerStatusBcast(mContext, "Data uploaded successfully");
+                            RESTService.sendServerStatusBcast(mContext, "Data sent successfully");
                         }
                     }, new Response.ErrorListener() {
                 @Override
