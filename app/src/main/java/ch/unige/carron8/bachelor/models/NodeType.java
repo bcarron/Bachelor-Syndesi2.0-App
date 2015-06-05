@@ -80,6 +80,26 @@ public enum NodeType {
             }
         }
     },
+    heater{
+        @Override
+        public int getIcon(String status){
+            if(status.equals("on")){
+                return R.drawable.node_heater_on;
+            }else{
+                return R.drawable.node_heater_off;
+            }
+        }
+    },
+    fan{
+        @Override
+        public int getIcon(String status){
+            if(status.equals("on")){
+                return R.drawable.node_fan_on;
+            }else{
+                return R.drawable.node_fan_off;
+            }
+        }
+    },
     generic;
 
     public static NodeType getType(String device){
@@ -95,6 +115,10 @@ public enum NodeType {
             return NodeType.alarm;
         }else if (device.contains("door")) {
             return NodeType.door;
+        }else if (device.contains("fan")) {
+            return NodeType.fan;
+        }else if (device.contains("heater")) {
+            return NodeType.heater;
         }else{
             return NodeType.generic;
         }
