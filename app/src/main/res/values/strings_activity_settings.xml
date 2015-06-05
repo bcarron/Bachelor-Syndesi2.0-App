@@ -12,17 +12,17 @@
     <string name="pref_title_server_url">Server address</string>
 
     <string-array name="pref_rate_titles">
-        <item>Very fast</item>
-        <item>Fast</item>
-        <item>Medium</item>
-        <item>Slow</item>
-        <item>Very slow</item>
+        <item>Very fast (10s)</item>
+        <item>Fast (30s)</item>
+        <item>Medium (1min)</item>
+        <item>Slow (2min)</item>
+        <item>Very slow (5min)</item>
     </string-array>
     <string-array name="pref_rate_values">
-        <item>1</item>
-        <item>5</item>
-        <item>15</item>
+        <item>10</item>
         <item>30</item>
         <item>60</item>
+        <item>120</item>
+        <item>300</item>
     </string-array>
 </resources>
