@@ -6,10 +6,10 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.AsyncTask;
+import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import ch.unige.carron8.bachelor.controllers.WakeLocker;
 import ch.unige.carron8.bachelor.controllers.network.SendDataTask;
 import ch.unige.carron8.bachelor.models.PreferenceKey;
 
@@ -21,12 +21,14 @@ public class SensorListener implements SensorEventListener {
     private Context mContext;
     private SensorManager mSensorManager;
     private int sensedData;
+    private PowerManager.WakeLock mWakeLock;
 
     public SensorListener(Context context, SensorManager sensorManager){
-        WakeLocker.acquire(context);
         this.mContext = context;
         this.mSensorManager = sensorManager;
         this.sensedData = 0;
+        this.mWakeLock = ((PowerManager) context.getSystemService(Context.POWER_SERVICE)).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "WakeLock");
+        this.mWakeLock.acquire();
     }
 
     @Override
@@ -42,6 +44,7 @@ public class SensorListener implements SensorEventListener {
         }
         if(sensorEvent.sensor.getType() != Sensor.TYPE_PROXIMITY) {
             mSensorManager.unregisterListener(this);
+            this.mWakeLock.release();
         }
         //Trick to get data from proximity sensor
         else{
@@ -49,7 +52,7 @@ public class SensorListener implements SensorEventListener {
                 sensedData++;
             }else{
                 mSensorManager.unregisterListener(this);
-                WakeLocker.release();
+                this.mWakeLock.release();
             }
         }
     }

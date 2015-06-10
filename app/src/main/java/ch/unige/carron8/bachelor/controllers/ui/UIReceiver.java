@@ -38,7 +38,7 @@ public class UIReceiver extends BroadcastReceiver {
             server.setText(response);
         }else{
             Float data = intent.getFloatExtra(BroadcastType.BCAST_EXTRA_SENSOR_DATA.toString(), 0);
-            ((MainActivity)mContext).addSensor(new SensorData(0, data, intent.getAction()));
+            ((MainActivity)mContext).addSensor(new SensorData("", data, intent.getAction()));
         }
     }
 }
