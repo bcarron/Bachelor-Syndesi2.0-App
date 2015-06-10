@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import ch.unige.carron8.bachelor.controllers.WakeLocker;
 import ch.unige.carron8.bachelor.controllers.network.SendDataTask;
 import ch.unige.carron8.bachelor.models.PreferenceKey;
 
@@ -22,6 +23,7 @@ public class SensorListener implements SensorEventListener {
     private int sensedData;
 
     public SensorListener(Context context, SensorManager sensorManager){
+        WakeLocker.acquire(context);
         this.mContext = context;
         this.mSensorManager = sensorManager;
         this.sensedData = 0;
@@ -47,6 +49,7 @@ public class SensorListener implements SensorEventListener {
                 sensedData++;
             }else{
                 mSensorManager.unregisterListener(this);
+                WakeLocker.release();
             }
         }
     }
