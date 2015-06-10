@@ -5,24 +5,24 @@ package ch.unige.carron8.bachelor.models;
  * Created by Blaise on 30.04.2015.
  */
 public class SensorData {
-    private int mAccountId;
+    private String mAccountId;
     private float mData;
     private String mDataType;
 
     public SensorData() {
     }
 
-    public SensorData(int accountId, float data, String dataType) {
+    public SensorData(String accountId, float data, String dataType) {
         this.mAccountId = accountId;
         this.mData = data;
         this.mDataType = dataType;
     }
 
-    public int getmAccountId() {
+    public String getmAccountId() {
         return mAccountId;
     }
 
-    public void setmAccountId(int mAccountId) {
+    public void setmAccountId(String mAccountId) {
         this.mAccountId = mAccountId;
     }
 

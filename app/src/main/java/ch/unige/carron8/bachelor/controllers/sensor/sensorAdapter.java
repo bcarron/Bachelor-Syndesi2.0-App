@@ -37,7 +37,7 @@ public View getView(int position, View convertView, ViewGroup parent) {
 
         SensorData sensor = mSensorsList.get(position);
         label.setText(SensorList.getStringType(Integer.parseInt(sensor.getmDataType())));
-        status.setText(String.valueOf(sensor.getmData()));
+        status.setText(String.valueOf(sensor.getmData())+SensorList.getStringUnit(Integer.parseInt(sensor.getmDataType())));
         image.setImageResource(SensorList.getIcon(Integer.parseInt(sensor.getmDataType())));
 
         return nodeView;

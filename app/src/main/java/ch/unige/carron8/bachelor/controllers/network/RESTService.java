@@ -130,7 +130,6 @@ public class RESTService {
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
-                            mAccountController.setAccountJSON(response);
                             Log.d("HTTP", response.toString());
                         }
                     }, new Response.ErrorListener() {
@@ -167,7 +166,6 @@ public class RESTService {
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
-                            mAccountController.setAccountJSON(response);
                             Log.d("HTTP", response.toString());
                         }
                     }, new Response.ErrorListener() {

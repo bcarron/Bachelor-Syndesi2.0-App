@@ -2,11 +2,15 @@ package ch.unige.carron8.bachelor.views;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import java.math.BigInteger;
 
 import ch.unige.carron8.bachelor.R;
 import ch.unige.carron8.bachelor.controllers.account.AccountController;
@@ -69,7 +73,8 @@ public class AccountSetup extends AppCompatActivity {
         if (name.equals("") || surname.equals("") || office.equals("") || targetLight.equals("") || targetTemp.equals("")) {
             Toast.makeText(this, R.string.account_setup_empty_fields, Toast.LENGTH_LONG).show();
         } else {
-            Account account = new Account(name, surname, office, Integer.parseInt(targetLight), Integer.parseInt(targetTemp));
+            String id = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
+            Account account = new Account(id, name, surname, office, Integer.parseInt(targetLight), Integer.parseInt(targetTemp));
 
             if (mAccountController.getAccount() == null) {
                 //Save account

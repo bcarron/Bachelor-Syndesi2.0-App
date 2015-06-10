@@ -7,7 +7,7 @@ import java.util.ArrayList;
  * Created by Blaise on 30.04.2015.
  */
 public class Account {
-    private int mId;
+    private String mId;
     private String mName;
     private String mSurname;
     private String mOffice;
@@ -15,13 +15,13 @@ public class Account {
     private int mTargetTemp;
     private ArrayList<String> mAvailableSensors;
 
-    public Account(String name, String surname, String office, int targetLight, int targetTemp) {
+    public Account(String id, String name, String surname, String office, int targetLight, int targetTemp) {
+        this.mId = id;
         this.mName = name;
         this.mSurname = surname;
         this.mOffice = office;
         this.mTargetLight = targetLight;
         this.mTargetTemp = targetTemp;
-        this.mId = 0; //Local id before sending account to the server
         mAvailableSensors = new ArrayList<String>();
     }
 
@@ -33,9 +33,9 @@ public class Account {
         this.mTargetTemp = targetTemp;
     }
 
-    public int getmId() { return mId; }
+    public String getmId() { return mId; }
 
-    public void setmId(int mId) { this.mId = mId; }
+    public void setmId(String mId) { this.mId = mId; }
 
     public String getmName() {
         return mName;
