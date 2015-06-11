@@ -28,6 +28,7 @@ public class SensorController implements SharedPreferences.OnSharedPreferenceCha
     private Activity mContext;
     private ArrayList<PendingIntent> sensorsLauncher;
     private AlarmManager mAlarmManager;
+    private ArrayList<String> mAvailableSensors;
 
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals(PreferenceKey.PREF_SERVER_URL.toString())) {
@@ -109,18 +110,23 @@ public class SensorController implements SharedPreferences.OnSharedPreferenceCha
     public void getSensorLaunchers(){
         sensorsLauncher = new ArrayList<PendingIntent>();
         SensorManager sensorManager = (SensorManager) mContext.getSystemService(Context.SENSOR_SERVICE);
-        ArrayList<String> availableSensors = new ArrayList<>();
+        mAvailableSensors = new ArrayList<>();
         for(Integer sensorType : SensorList.sensorUsed){
             if (sensorManager.getDefaultSensor(sensorType) != null){
                 Intent sensorIntent = new Intent(mContext, SensorService.class);
                 sensorIntent.setAction(String.valueOf(sensorType));
                 sensorsLauncher.add(PendingIntent.getService(mContext, 0, sensorIntent, PendingIntent.FLAG_UPDATE_CURRENT));
-                availableSensors.add(SensorList.getStringType(sensorType));
+                mAvailableSensors.add(SensorList.getStringType(sensorType));
             }
         }
-        Account account = AccountController.getInstance(mContext).getAccount();
-        account.setmAvailableSensors(availableSensors);
-        AccountController.getInstance(mContext).saveAccount(account);
+    }
+
+    public ArrayList<String> getmAvailableSensors() {
+        return mAvailableSensors;
+    }
+
+    public void setmAvailableSensors(ArrayList<String> mAvailableSensors) {
+        this.mAvailableSensors = mAvailableSensors;
     }
 
     public void setmContext(Activity context) {

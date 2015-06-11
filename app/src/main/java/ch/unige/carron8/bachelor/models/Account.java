@@ -2,6 +2,8 @@ package ch.unige.carron8.bachelor.models;
 
 import java.util.ArrayList;
 
+import ch.unige.carron8.bachelor.controllers.sensor.SensorController;
+
 /**
  * Represents the active user's account
  * Created by Blaise on 30.04.2015.
@@ -15,14 +17,14 @@ public class Account {
     private int mTargetTemp;
     private ArrayList<String> mAvailableSensors;
 
-    public Account(String id, String name, String surname, String office, int targetLight, int targetTemp) {
+    public Account(String id, String name, String surname, String office, int targetLight, int targetTemp, ArrayList<String> availableSensors) {
         this.mId = id;
         this.mName = name;
         this.mSurname = surname;
         this.mOffice = office;
         this.mTargetLight = targetLight;
         this.mTargetTemp = targetTemp;
-        mAvailableSensors = new ArrayList<String>();
+        this.mAvailableSensors = availableSensors;
     }
 
     public void updateAccount(String name, String surname, String office, int targetLight, int targetTemp) {

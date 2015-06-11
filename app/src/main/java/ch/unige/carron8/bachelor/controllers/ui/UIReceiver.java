@@ -25,7 +25,6 @@ public class UIReceiver extends BroadcastReceiver {
         mContext = context;
     }
 
-    //TODO: Update the data of multiple sensors
     @Override
     public void onReceive(Context context, Intent intent) {
         if (intent.getAction().equals(BroadcastType.BCAST_TYPE_SERVER_STATUS.toString())) {

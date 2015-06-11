@@ -14,6 +14,7 @@ import java.math.BigInteger;
 
 import ch.unige.carron8.bachelor.R;
 import ch.unige.carron8.bachelor.controllers.account.AccountController;
+import ch.unige.carron8.bachelor.controllers.sensor.SensorController;
 import ch.unige.carron8.bachelor.models.Account;
 
 /**
@@ -74,7 +75,7 @@ public class AccountSetup extends AppCompatActivity {
             Toast.makeText(this, R.string.account_setup_empty_fields, Toast.LENGTH_LONG).show();
         } else {
             String id = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
-            Account account = new Account(id, name, surname, office, Integer.parseInt(targetLight), Integer.parseInt(targetTemp));
+            Account account = new Account(id, name, surname, office, Integer.parseInt(targetLight), Integer.parseInt(targetTemp), SensorController.getInstance(this).getmAvailableSensors());
 
             if (mAccountController.getAccount() == null) {
                 //Save account
