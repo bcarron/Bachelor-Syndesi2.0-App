@@ -5,12 +5,9 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import java.math.BigInteger;
 
 import ch.unige.carron8.bachelor.R;
 import ch.unige.carron8.bachelor.controllers.account.AccountController;
