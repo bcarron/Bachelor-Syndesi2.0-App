@@ -12,12 +12,12 @@ public class Account {
     private String mId;
     private String mName;
     private String mSurname;
-    private String mOffice;
+    private OfficeRoom mOffice;
     private int mTargetLight;
     private int mTargetTemp;
     private ArrayList<String> mAvailableSensors;
 
-    public Account(String id, String name, String surname, String office, int targetLight, int targetTemp, ArrayList<String> availableSensors) {
+    public Account(String id, String name, String surname, OfficeRoom office, int targetLight, int targetTemp, ArrayList<String> availableSensors) {
         this.mId = id;
         this.mName = name;
         this.mSurname = surname;
@@ -27,7 +27,7 @@ public class Account {
         this.mAvailableSensors = availableSensors;
     }
 
-    public void updateAccount(String name, String surname, String office, int targetLight, int targetTemp) {
+    public void updateAccount(String name, String surname, OfficeRoom office, int targetLight, int targetTemp) {
         this.mName = name;
         this.mSurname = surname;
         this.mOffice = office;
@@ -55,11 +55,11 @@ public class Account {
         this.mSurname = mSurname;
     }
 
-    public String getmOffice() {
+    public OfficeRoom getmOffice() {
         return mOffice;
     }
 
-    public void setmOffice(String mOffice) {
+    public void setmOffice(OfficeRoom mOffice) {
         this.mOffice = mOffice;
     }
 

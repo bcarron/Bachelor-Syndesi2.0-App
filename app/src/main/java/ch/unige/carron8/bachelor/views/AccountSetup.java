@@ -6,13 +6,16 @@ import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import ch.unige.carron8.bachelor.R;
 import ch.unige.carron8.bachelor.controllers.account.AccountController;
 import ch.unige.carron8.bachelor.controllers.sensor.SensorController;
 import ch.unige.carron8.bachelor.models.Account;
+import ch.unige.carron8.bachelor.models.OfficeRoom;
 
 /**
  * Creates a view to set up or update the user's account.
@@ -38,11 +41,16 @@ public class AccountSetup extends AppCompatActivity {
     }
 
     public void populate() {
+        //Set the office spinner rooms
+        Spinner spinner = (Spinner) findViewById(R.id.office);
+        ArrayAdapter<OfficeRoom> adapter = new ArrayAdapter<OfficeRoom>(this, android.R.layout.simple_list_item_1, OfficeRoom.values());
+        spinner.setAdapter(adapter);
+
         Account account = mAccountController.getAccount();
         if (account != null) {
             ((EditText) findViewById(R.id.name)).setText(account.getmName());
             ((EditText) findViewById(R.id.surname)).setText(account.getmSurname());
-            ((EditText) findViewById(R.id.office)).setText(account.getmOffice());
+            spinner.setSelection(adapter.getPosition(account.getmOffice()));
             ((EditText) findViewById(R.id.light_target)).setText(String.valueOf(account.getmTargetLight()));
             ((EditText) findViewById(R.id.temp_target)).setText(String.valueOf(account.getmTargetTemp()));
         }
@@ -59,12 +67,12 @@ public class AccountSetup extends AppCompatActivity {
         //Get the values from the fields
         EditText nameText = (EditText) findViewById(R.id.name);
         EditText surnameText = (EditText) findViewById(R.id.surname);
-        EditText officeText = (EditText) findViewById(R.id.office);
+        Spinner officeSpinner = (Spinner) findViewById(R.id.office);
         EditText lightText = (EditText) findViewById(R.id.light_target);
         EditText tempText = (EditText) findViewById(R.id.temp_target);
         String name = nameText.getText().toString();
         String surname = surnameText.getText().toString();
-        String office = officeText.getText().toString();
+        OfficeRoom office = (OfficeRoom) officeSpinner.getSelectedItem();
         String targetLight = lightText.getText().toString();
         String targetTemp = tempText.getText().toString();
 
