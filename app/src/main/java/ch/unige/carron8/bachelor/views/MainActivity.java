@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import ch.unige.carron8.bachelor.R;
 import ch.unige.carron8.bachelor.controllers.account.AccountController;
 import ch.unige.carron8.bachelor.controllers.sensor.SensorController;
+import ch.unige.carron8.bachelor.controllers.sensor.SensorList;
 import ch.unige.carron8.bachelor.controllers.sensor.sensorAdapter;
 import ch.unige.carron8.bachelor.controllers.ui.UIReceiver;
 import ch.unige.carron8.bachelor.models.BroadcastType;
@@ -113,12 +114,10 @@ public class MainActivity extends AppCompatActivity {
         //Reset the context on the sensor controller
         SensorController.getInstance(this).setmContext(this);
         //Register the Broadcast listener
-        IntentFilter filter = new IntentFilter(String.valueOf(Sensor.TYPE_LIGHT));
-        filter.addAction(String.valueOf(Sensor.TYPE_AMBIENT_TEMPERATURE));
-        filter.addAction(String.valueOf(Sensor.TYPE_PRESSURE));
-        filter.addAction(String.valueOf(Sensor.TYPE_RELATIVE_HUMIDITY));
-        filter.addAction(String.valueOf(Sensor.TYPE_PROXIMITY));
-        filter.addAction(BroadcastType.BCAST_TYPE_SERVER_STATUS.toString());
+        IntentFilter filter = new IntentFilter();
+        for(Integer sensorType : SensorList.sensorUsed){
+            filter.addAction(String.valueOf(sensorType));
+        }
         LocalBroadcastManager.getInstance(this).registerReceiver(uiReceiver, filter);
     }
 

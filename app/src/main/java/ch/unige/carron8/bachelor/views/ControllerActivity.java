@@ -41,7 +41,9 @@ public class ControllerActivity extends AppCompatActivity{
         setSupportActionBar(toolbar);
         //Creates the broadcast receiver that updates the UI
         uiReceiver = new UIReceiver(this);
-        //Set the sensor list
+        //Get the Rest service
+        restService = RESTService.getInstance(this);
+        //Set the nodes list
         final ListView listView = (ListView) findViewById(R.id.nodes_list);
         mNodeList = new ArrayList<>();
         nodeAdapter = new NodeAdapter(this, mNodeList);
@@ -50,7 +52,7 @@ public class ControllerActivity extends AppCompatActivity{
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 DeviceNode node = (DeviceNode)listView.getAdapter().getItem(position);
-                RESTService.getInstance(getApplicationContext()).toggleNode(node);
+                restService.toggleNode(node);
             }
         });
     }
@@ -75,9 +77,9 @@ public class ControllerActivity extends AppCompatActivity{
     protected void onResume() {
         super.onResume();
         //List nodes
-        RESTService.getInstance(this).fetchNodes();
+        restService.fetchNodes();
         //Reset the context on the REST service
-        RESTService.getInstance(this).setmContext(this);
+        restService.setmContext(this);
         //Register the Broadcast listener
         IntentFilter filter = new IntentFilter(String.valueOf(BroadcastType.BCAST_TYPE_CONTROLLER_STATUS));
         LocalBroadcastManager.getInstance(this).registerReceiver(uiReceiver, filter);

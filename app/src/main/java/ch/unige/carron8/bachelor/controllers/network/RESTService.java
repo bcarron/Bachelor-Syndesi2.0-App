@@ -182,7 +182,7 @@ public class RESTService {
         }
     }
 
-    public void fetchNodes(){
+    public void fetchNodes() {
         String server_url = PreferenceManager.getDefaultSharedPreferences(mContext).getString(PreferenceKey.PREF_SERVER_URL.toString(), "");
         //TESTING URL
         server_url = "http://129.194.70.52:8111/ero2proxy";
@@ -194,34 +194,33 @@ public class RESTService {
             }
             final String url = server_url + "/service/type/xml_rspec";
 
-            StringRequest request = new StringRequest(Request.Method.GET, url,
-                    new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
-                            Log.d("HTTP", response);
+            StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    Log.d("HTTP", response);
 
-                            try {
-                                DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-                                DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-                                Document document = documentBuilder.parse(new InputSource(new StringReader(response)));
+                    try {
+                        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+                        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+                        Document document = documentBuilder.parse(new InputSource(new StringReader(response)));
 
-                                NodeList nl = document.getElementsByTagName("gpio");
-                                for (int i = 0; i < nl.getLength(); i++) {
-                                    Node n = nl.item(i);
-                                    Element e = (Element) n.getFirstChild();
-                                    String device = e.getAttribute("name");
-                                    NodeType nodeType = NodeType.getType(device);
-                                    ((ControllerActivity) mContext).addNode(new DeviceNode(device.substring(device.indexOf("NID: ")+5, device.length()), nodeType, nodeType.getStatus("default")));
-                                }
-                            } catch (ParserConfigurationException e) {
-                                e.printStackTrace();
-                            } catch (SAXException e) {
-                                e.printStackTrace();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
+                        NodeList nl = document.getElementsByTagName("gpio");
+                        for (int i = 0; i < nl.getLength(); i++) {
+                            Node n = nl.item(i);
+                            Element e = (Element) n.getFirstChild();
+                            String device = e.getAttribute("name");
+                            NodeType nodeType = NodeType.getType(device);
+                            ((ControllerActivity) mContext).addNode(new DeviceNode(device.substring(device.indexOf("NID: ") + 5, device.length()), nodeType, nodeType.getStatus("default")));
                         }
-                    }, new Response.ErrorListener() {
+                    } catch (ParserConfigurationException e) {
+                        e.printStackTrace();
+                    } catch (SAXException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     Log.d("HTTP", "Error connecting to server address " + url);
@@ -230,12 +229,12 @@ public class RESTService {
             });
 
             mRequestQueue.add(request);
-        }else {
+        } else {
             RESTService.sendControllerStatusBcast(mContext, mContext.getString(R.string.connection_no_server_set));
         }
     }
 
-    public void toggleNode(final DeviceNode node){
+    public void toggleNode(final DeviceNode node) {
         final ArrayList<DeviceNode> nodeList = new ArrayList<>();
         String server_url = PreferenceManager.getDefaultSharedPreferences(mContext).getString(PreferenceKey.PREF_SERVER_URL.toString(), "");
         //TESTING URL
@@ -246,7 +245,7 @@ public class RESTService {
             if (server_url.length() > 7 && !server_url.substring(0, 7).equals("http://")) {
                 server_url = "http://" + server_url;
             }
-            server_url += "/mediate?service="+node.getmNID()+"&resource="+node.getmType()+"&status="+node.getmType().getToggleStatus(node.getmStatus());
+            server_url += "/mediate?service=" + node.getmNID() + "&resource=" + node.getmType() + "&status=" + node.getmType().getToggleStatus(node.getmStatus());
 
             final String url = server_url;
 
@@ -255,10 +254,10 @@ public class RESTService {
                         @Override
                         public void onResponse(String response) {
                             Log.d("HTTP", response);
-                            if(response.equals("ERROR")){
+                            if (response.equals("ERROR")) {
                                 RESTService.sendControllerStatusBcast(mContext, "Error connecting to the node");
-                            }else{
-                                ((ControllerActivity)mContext).addNode(new DeviceNode(node.getmNID(), node.getmType(), NodeType.parseResponse(response)));
+                            } else {
+                                ((ControllerActivity) mContext).addNode(new DeviceNode(node.getmNID(), node.getmType(), NodeType.parseResponse(response)));
                             }
                         }
                     }, new Response.ErrorListener() {
@@ -270,7 +269,7 @@ public class RESTService {
             });
 
             mRequestQueue.add(request);
-        }else {
+        } else {
             RESTService.sendControllerStatusBcast(mContext, mContext.getString(R.string.connection_no_server_set));
         }
     }

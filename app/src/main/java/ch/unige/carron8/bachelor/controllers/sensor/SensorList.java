@@ -11,7 +11,7 @@ import ch.unige.carron8.bachelor.R;
  */
 public class SensorList {
     public static Integer[] sensorUsed = new Integer[]
-            {Sensor.TYPE_LIGHT,Sensor.TYPE_AMBIENT_TEMPERATURE,Sensor.TYPE_PRESSURE,Sensor.TYPE_RELATIVE_HUMIDITY,Sensor.TYPE_PROXIMITY};
+            {Sensor.TYPE_LIGHT, Sensor.TYPE_AMBIENT_TEMPERATURE, Sensor.TYPE_PRESSURE, Sensor.TYPE_RELATIVE_HUMIDITY, Sensor.TYPE_PROXIMITY};
 
     public static String getStringType(int sensorType){
         String stringType;
@@ -21,7 +21,7 @@ public class SensorList {
             case Sensor.TYPE_PRESSURE: stringType = "PRESSURE"; break;
             case Sensor.TYPE_RELATIVE_HUMIDITY: stringType = "HUMIDITY"; break;
             case Sensor.TYPE_PROXIMITY: stringType = "PROXIMITY"; break;
-            default: stringType = "Undefined"; break;
+            default: stringType = "UNDEFINED"; break;
         }
         return stringType;
     }
@@ -47,8 +47,7 @@ public class SensorList {
             case Sensor.TYPE_PRESSURE: icon = R.drawable.sensor_pressure; break;
             case Sensor.TYPE_RELATIVE_HUMIDITY: icon = R.drawable.sensor_humidity; break;
             case Sensor.TYPE_PROXIMITY: icon = R.drawable.sensor_proximity; break;
-            case Sensor.TYPE_ACCELEROMETER: icon = R.drawable.sensor; break;
-            default: icon = 0; break;
+            default: icon = R.drawable.sensor; break;
         }
         return icon;
     }
