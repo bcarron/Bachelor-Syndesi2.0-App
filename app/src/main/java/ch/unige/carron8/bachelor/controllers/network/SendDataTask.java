@@ -36,5 +36,4 @@ public class SendDataTask extends AsyncTask<SensorEvent, Void, SensorEvent> {
 
         return event;
     }
-
 }

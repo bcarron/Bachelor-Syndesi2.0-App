@@ -4,7 +4,7 @@
     <string name="sensors">Sensors Status</string>
     <string name="sensors_disabled">Enable sensors in the settings</string>
 
-    <string name="server">Server Status</string>
+    <string name="server">Server Response</string>
     <string name="connection_no_server_set">Set server address in the settings</string>
     <string name="connection_no_data">No data to send</string>
     <string name="connection_ok">Server OK</string>
@@ -22,8 +22,8 @@
     <string name="form_temp_target">Preferred temperature</string>
     <string name="form_submit_button">Submit</string>
 
-    <string name="action_controller">Nodes controller</string>
-    <string name="title_controller">Nodes controller</string>
+    <string name="action_controller">Nodes Manager</string>
+    <string name="title_controller">Nodes Manager</string>
     <string name="controller_node">Nodes</string>
     <string name="controller_no_nodes">No nodes detected on the server</string>
 </resources>
