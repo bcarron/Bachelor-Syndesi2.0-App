@@ -22,38 +22,38 @@ import ch.unige.carron8.bachelor.models.SensorData;
  */
 public class AccountController {
     private static AccountController mInstance;
-    private Context mContext;
+    private Context mAppContext;
     private Gson mGson;
     private SharedPreferences mAccountPref;
     private SharedPreferences.Editor mAccountPrefEditor;
 
 
     public AccountController(Context context) {
-        this.mContext = context;
+        this.mAppContext = context;
         this.mGson = new Gson();
-        this.mAccountPref = PreferenceManager.getDefaultSharedPreferences(mContext);
+        this.mAccountPref = PreferenceManager.getDefaultSharedPreferences(mAppContext);
         this.mAccountPrefEditor = mAccountPref.edit();
     }
 
-    public static synchronized AccountController getInstance(Context context) {
+    public static synchronized AccountController getInstance(Context appContext) {
         if (mInstance == null) {
-            mInstance = new AccountController(context);
+            mInstance = new AccountController(appContext);
         }
         return mInstance;
     }
 
     public void updateAccount() {
-        RESTService.getInstance(mContext).updateAccount(this.getJSON());
+        RESTService.getInstance(mAppContext).updateAccount(this.getJSON());
     }
 
     public void createAccount(Account account) {
         this.setAccount(account);
-        RESTService.getInstance(mContext).createAccount(this.getJSON());
+        RESTService.getInstance(mAppContext).createAccount(this.getJSON());
     }
 
     public void saveAccount(Account account) {
         this.setAccount(account);
-        RESTService.getInstance(mContext).updateAccount(this.getJSON());
+        RESTService.getInstance(mAppContext).updateAccount(this.getJSON());
     }
 
     public JSONObject formatDataJSON(Float data, String dataType) {
@@ -88,17 +88,6 @@ public class AccountController {
 
     public void setAccount(Account account) {
         mAccountPrefEditor.putString(PreferenceKey.PREF_SAVED_ACCOUNT.toString(), mGson.toJson(account));
-        mAccountPrefEditor.commit();
-    }
-
-    public void setAccountGSON(String account) {
-        mAccountPrefEditor.putString(PreferenceKey.PREF_SAVED_ACCOUNT.toString(), account);
-        mAccountPrefEditor.commit();
-    }
-
-    public void setAccountJSON(JSONObject account) {
-        Log.d("ACCOUNT3", account.toString());
-        mAccountPrefEditor.putString(PreferenceKey.PREF_SAVED_ACCOUNT.toString(), account.toString());
         mAccountPrefEditor.commit();
     }
 }

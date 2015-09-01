@@ -18,16 +18,16 @@ import ch.unige.carron8.bachelor.models.PreferenceKey;
  * Created by Blaise on 27.05.2015.
  */
 public class SensorListener implements SensorEventListener {
-    private Context mContext;
+    private Context mAppContext;
     private SensorManager mSensorManager;
-    private int sensedData;
+    private int mSensedData;
     private PowerManager.WakeLock mWakeLock;
 
-    public SensorListener(Context context, SensorManager sensorManager){
-        this.mContext = context;
+    public SensorListener(Context appContext, SensorManager sensorManager){
+        this.mAppContext = appContext;
         this.mSensorManager = sensorManager;
-        this.sensedData = 0;
-        this.mWakeLock = ((PowerManager) context.getSystemService(Context.POWER_SERVICE)).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "WakeLock");
+        this.mSensedData = 0;
+        this.mWakeLock = ((PowerManager) appContext.getSystemService(Context.POWER_SERVICE)).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "WakeLock");
         this.mWakeLock.acquire();
     }
 
@@ -38,8 +38,8 @@ public class SensorListener implements SensorEventListener {
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
-        if(PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(PreferenceKey.PREF_SENSOR_PERM.toString(), false)){
-            AsyncTask sendData = new SendDataTask(mContext);
+        if(PreferenceManager.getDefaultSharedPreferences(mAppContext).getBoolean(PreferenceKey.PREF_SENSOR_PERM.toString(), false)){
+            AsyncTask sendData = new SendDataTask(mAppContext);
             sendData.execute(new SensorEvent[]{sensorEvent});
         }
         if(sensorEvent.sensor.getType() != Sensor.TYPE_PROXIMITY) {
@@ -48,8 +48,8 @@ public class SensorListener implements SensorEventListener {
         }
         //Trick to get data from proximity sensor
         else{
-            if(sensedData < 2){
-                sensedData++;
+            if(mSensedData < 2){
+                mSensedData++;
             }else{
                 mSensorManager.unregisterListener(this);
                 this.mWakeLock.release();

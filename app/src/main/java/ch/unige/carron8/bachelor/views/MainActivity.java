@@ -2,7 +2,6 @@ package ch.unige.carron8.bachelor.views;
 
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.hardware.Sensor;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
@@ -21,7 +20,7 @@ import ch.unige.carron8.bachelor.R;
 import ch.unige.carron8.bachelor.controllers.account.AccountController;
 import ch.unige.carron8.bachelor.controllers.sensor.SensorController;
 import ch.unige.carron8.bachelor.controllers.sensor.SensorList;
-import ch.unige.carron8.bachelor.controllers.sensor.sensorAdapter;
+import ch.unige.carron8.bachelor.controllers.sensor.SensorAdapter;
 import ch.unige.carron8.bachelor.controllers.ui.UIReceiver;
 import ch.unige.carron8.bachelor.models.BroadcastType;
 import ch.unige.carron8.bachelor.models.PreferenceKey;
@@ -34,7 +33,7 @@ import ch.unige.carron8.bachelor.models.SensorData;
 public class MainActivity extends AppCompatActivity {
     private UIReceiver uiReceiver;
     private ArrayList<SensorData> mSensorsList;
-    private sensorAdapter mSensorsAdapter;
+    private SensorAdapter mSensorsAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,13 +48,13 @@ public class MainActivity extends AppCompatActivity {
         //Set the sensor list
         ListView listView = (ListView) findViewById(R.id.sensor_list);
         mSensorsList = new ArrayList<>();
-        mSensorsAdapter = new sensorAdapter(this, mSensorsList);
+        mSensorsAdapter = new SensorAdapter(this, mSensorsList);
         listView.setAdapter(mSensorsAdapter);
 
         //Detect if an account is set
         if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(PreferenceKey.PREF_SAVED_ACCOUNT.toString(), "").equals("")) {
             //Create account
-            Intent intent = new Intent(this, AccountSetup.class);
+            Intent intent = new Intent(this, AccountSetupActivity.class);
             startActivity(intent);
         } else {
             //Creates the broadcast receiver that updates the UI
@@ -100,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(this, SettingsActivity.class));
             return true;
         }else if(id == R.id.action_controller){
-            startActivity(new Intent(this, ControllerActivity.class));
+            startActivity(new Intent(this, NodesControllerActivity.class));
             return true;
         }
 
@@ -112,12 +111,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         //Reset the context on the sensor controller
-        SensorController.getInstance(this).setmContext(this);
+        SensorController.getInstance(this).setmActivity(this);
         //Register the Broadcast listener
         IntentFilter filter = new IntentFilter();
         for(Integer sensorType : SensorList.sensorUsed){
             filter.addAction(String.valueOf(sensorType));
         }
+        filter.addAction(String.valueOf(BroadcastType.BCAST_TYPE_SERVER_STATUS));
+        filter.addAction(String.valueOf(BroadcastType.BCAST_TYPE_CONTROLLER_STATUS));
         LocalBroadcastManager.getInstance(this).registerReceiver(uiReceiver, filter);
     }
 

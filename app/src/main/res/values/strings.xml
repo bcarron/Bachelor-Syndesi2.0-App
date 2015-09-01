@@ -1,10 +1,10 @@
 <resources>
     <string name="app_name">Sensor Manager</string>
 
-    <string name="sensors">Sensors status</string>
+    <string name="sensors">Sensors Status</string>
     <string name="sensors_disabled">Enable sensors in the settings</string>
 
-    <string name="server">Server status</string>
+    <string name="server">Server Status</string>
     <string name="connection_no_server_set">Set server address in the settings</string>
     <string name="connection_no_data">No data to send</string>
     <string name="connection_ok">Server OK</string>

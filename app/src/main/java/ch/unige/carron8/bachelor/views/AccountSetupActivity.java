@@ -21,7 +21,7 @@ import ch.unige.carron8.bachelor.models.OfficeRoom;
  * Creates a view to set up or update the user's account.
  * Created by Blaise on 27.04.2015.
  */
-public class AccountSetup extends AppCompatActivity {
+public class AccountSetupActivity extends AppCompatActivity {
     private AccountController mAccountController;
 
     @Override

@@ -24,7 +24,6 @@ import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.ArrayList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -33,10 +32,10 @@ import javax.xml.parsers.ParserConfigurationException;
 import ch.unige.carron8.bachelor.R;
 import ch.unige.carron8.bachelor.controllers.account.AccountController;
 import ch.unige.carron8.bachelor.models.BroadcastType;
-import ch.unige.carron8.bachelor.models.DeviceNode;
+import ch.unige.carron8.bachelor.models.NodeDevice;
 import ch.unige.carron8.bachelor.models.NodeType;
 import ch.unige.carron8.bachelor.models.PreferenceKey;
-import ch.unige.carron8.bachelor.views.ControllerActivity;
+import ch.unige.carron8.bachelor.views.NodesControllerActivity;
 
 /**
  * Implements a REST service in a singleton class to send data to the server
@@ -44,26 +43,26 @@ import ch.unige.carron8.bachelor.views.ControllerActivity;
  */
 public class RESTService {
     private static RESTService mInstance;
-    private Context mContext;
+    private Context mAppContext;
     private RequestQueue mRequestQueue;
     private AccountController mAccountController;
 
-    public RESTService(Context context) {
-        mContext = context;
+    public RESTService(Context appContext) {
+        mAppContext = appContext;
         mRequestQueue = this.getRequestQueue();
-        mAccountController = AccountController.getInstance(mContext);
+        mAccountController = AccountController.getInstance(mAppContext);
     }
 
-    public static synchronized RESTService getInstance(Context context) {
+    public static synchronized RESTService getInstance(Context appContext) {
         if (mInstance == null) {
-            mInstance = new RESTService(context);
+            mInstance = new RESTService(appContext);
         }
         return mInstance;
     }
 
     public RequestQueue getRequestQueue() {
         if (mRequestQueue == null) {
-            mRequestQueue = Volley.newRequestQueue(mContext.getApplicationContext());
+            mRequestQueue = Volley.newRequestQueue(mAppContext.getApplicationContext());
         }
         return mRequestQueue;
     }
@@ -75,7 +74,7 @@ public class RESTService {
      * @param dataType the type of sensor used to collect the data
      */
     public void sendData(Float data, String dataType) {
-        String server_url = PreferenceManager.getDefaultSharedPreferences(mContext).getString(PreferenceKey.PREF_SERVER_URL.toString(), "");
+        String server_url = PreferenceManager.getDefaultSharedPreferences(mAppContext).getString(PreferenceKey.PREF_SERVER_URL.toString(), "");
 
         if (!server_url.equals("")) {
             // Instantiate the RequestQueue.
@@ -93,20 +92,20 @@ public class RESTService {
                         public void onResponse(JSONObject response) {
                             Log.d("HTTP", response.toString());
                             //Send broadcast to update the UI if the app is active
-                            RESTService.sendServerStatusBcast(mContext, "Data sent successfully");
+                            RESTService.sendServerStatusBcast(mAppContext, response.toString());
                         }
                     }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     Log.d("HTTP", "Error connecting to server address " + url);
                     //Send broadcast to update the UI if the app is active
-                    RESTService.sendServerStatusBcast(mContext, mContext.getString(R.string.connection_error) + ": " + url);
+                    RESTService.sendServerStatusBcast(mAppContext, mAppContext.getString(R.string.connection_error) + ": " + url);
                 }
             });
 
             mRequestQueue.add(request);
         } else {
-            RESTService.sendServerStatusBcast(mContext, mContext.getString(R.string.connection_no_server_set));
+            RESTService.sendServerStatusBcast(mAppContext, mAppContext.getString(R.string.connection_no_server_set));
         }
     }
 
@@ -116,7 +115,7 @@ public class RESTService {
      * @param account the account to create
      */
     public void createAccount(JSONObject account) {
-        String server_url = PreferenceManager.getDefaultSharedPreferences(mContext).getString(PreferenceKey.PREF_SERVER_URL.toString(), "");
+        String server_url = PreferenceManager.getDefaultSharedPreferences(mAppContext).getString(PreferenceKey.PREF_SERVER_URL.toString(), "");
 
         if (!server_url.equals("")) {
             // Instantiate the RequestQueue.
@@ -131,18 +130,19 @@ public class RESTService {
                         @Override
                         public void onResponse(JSONObject response) {
                             Log.d("HTTP", response.toString());
+                            RESTService.sendServerStatusBcast(mAppContext, response.toString());
                         }
                     }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     Log.d("HTTP", "Error connecting to server " + url);
-                    RESTService.sendServerStatusBcast(mContext, mContext.getString(R.string.connection_error) + ": " + url);
+                    RESTService.sendServerStatusBcast(mAppContext, mAppContext.getString(R.string.connection_error) + ": " + url);
                 }
             });
 
             mRequestQueue.add(request);
         } else {
-            RESTService.sendServerStatusBcast(mContext, mContext.getString(R.string.connection_no_server_set));
+            RESTService.sendServerStatusBcast(mAppContext, mAppContext.getString(R.string.connection_no_server_set));
         }
     }
 
@@ -152,7 +152,7 @@ public class RESTService {
      * @param account the account to update
      */
     public void updateAccount(JSONObject account) {
-        String server_url = PreferenceManager.getDefaultSharedPreferences(mContext).getString(PreferenceKey.PREF_SERVER_URL.toString(), "");
+        String server_url = PreferenceManager.getDefaultSharedPreferences(mAppContext).getString(PreferenceKey.PREF_SERVER_URL.toString(), "");
 
         if (!server_url.equals("")) {
             // Instantiate the RequestQueue.
@@ -167,23 +167,24 @@ public class RESTService {
                         @Override
                         public void onResponse(JSONObject response) {
                             Log.d("HTTP", response.toString());
+                            RESTService.sendServerStatusBcast(mAppContext, response.toString());
                         }
                     }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     Log.d("HTTP", "Error connecting to server " + url);
-                    RESTService.sendServerStatusBcast(mContext, mContext.getString(R.string.connection_error) + ": " + url);
+                    RESTService.sendServerStatusBcast(mAppContext, mAppContext.getString(R.string.connection_error) + ": " + url);
                 }
             });
 
             mRequestQueue.add(request);
         } else {
-            RESTService.sendServerStatusBcast(mContext, mContext.getString(R.string.connection_no_server_set));
+            RESTService.sendServerStatusBcast(mAppContext, mAppContext.getString(R.string.connection_no_server_set));
         }
     }
 
     public void fetchNodes() {
-        String server_url = PreferenceManager.getDefaultSharedPreferences(mContext).getString(PreferenceKey.PREF_SERVER_URL.toString(), "");
+        String server_url = PreferenceManager.getDefaultSharedPreferences(mAppContext).getString(PreferenceKey.PREF_SERVER_URL.toString(), "");
         //TESTING URL
         server_url = "http://129.194.70.52:8111/ero2proxy";
 
@@ -210,7 +211,7 @@ public class RESTService {
                             Element e = (Element) n.getFirstChild();
                             String device = e.getAttribute("name");
                             NodeType nodeType = NodeType.getType(device);
-                            ((ControllerActivity) mContext).addNode(new DeviceNode(device.substring(device.indexOf("NID: ") + 5, device.length()), nodeType, nodeType.getStatus("default")));
+                            ((NodesControllerActivity) mAppContext).addNode(new NodeDevice(device.substring(device.indexOf("NID: ") + 5, device.length()), nodeType, nodeType.getStatus("default")));
                         }
                     } catch (ParserConfigurationException e) {
                         e.printStackTrace();
@@ -224,19 +225,18 @@ public class RESTService {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     Log.d("HTTP", "Error connecting to server address " + url);
-                    RESTService.sendControllerStatusBcast(mContext, mContext.getString(R.string.connection_error) + ": " + url);
+                    RESTService.sendControllerStatusBcast(mAppContext, mAppContext.getString(R.string.connection_error) + ": " + url);
                 }
             });
 
             mRequestQueue.add(request);
         } else {
-            RESTService.sendControllerStatusBcast(mContext, mContext.getString(R.string.connection_no_server_set));
+            RESTService.sendControllerStatusBcast(mAppContext, mAppContext.getString(R.string.connection_no_server_set));
         }
     }
 
-    public void toggleNode(final DeviceNode node) {
-        final ArrayList<DeviceNode> nodeList = new ArrayList<>();
-        String server_url = PreferenceManager.getDefaultSharedPreferences(mContext).getString(PreferenceKey.PREF_SERVER_URL.toString(), "");
+    public void toggleNode(final NodeDevice node) {
+        String server_url = PreferenceManager.getDefaultSharedPreferences(mAppContext).getString(PreferenceKey.PREF_SERVER_URL.toString(), "");
         //TESTING URL
         server_url = "http://129.194.70.52:8111/ero2proxy";
 
@@ -255,22 +255,22 @@ public class RESTService {
                         public void onResponse(String response) {
                             Log.d("HTTP", response);
                             if (response.equals("ERROR")) {
-                                RESTService.sendControllerStatusBcast(mContext, "Error connecting to the node");
+                                RESTService.sendControllerStatusBcast(mAppContext, "Error connecting to the node");
                             } else {
-                                ((ControllerActivity) mContext).addNode(new DeviceNode(node.getmNID(), node.getmType(), NodeType.parseResponse(response)));
+                                ((NodesControllerActivity) mAppContext).addNode(new NodeDevice(node.getmNID(), node.getmType(), NodeType.parseResponse(response)));
                             }
                         }
                     }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     Log.d("HTTP", "Error connecting to server address " + url);
-                    RESTService.sendControllerStatusBcast(mContext, mContext.getString(R.string.connection_error) + ": " + url);
+                    RESTService.sendControllerStatusBcast(mAppContext, mAppContext.getString(R.string.connection_error) + ": " + url);
                 }
             });
 
             mRequestQueue.add(request);
         } else {
-            RESTService.sendControllerStatusBcast(mContext, mContext.getString(R.string.connection_no_server_set));
+            RESTService.sendControllerStatusBcast(mAppContext, mAppContext.getString(R.string.connection_no_server_set));
         }
     }
 
@@ -300,11 +300,7 @@ public class RESTService {
         LocalBroadcastManager.getInstance(context).sendBroadcast(localIntent);
     }
 
-    public Context getmContext() {
-        return mContext;
-    }
-
-    public void setmContext(Context mContext) {
-        this.mContext = mContext;
+    public void setmAppContext(Context appContext) {
+        this.mAppContext = appContext;
     }
 }

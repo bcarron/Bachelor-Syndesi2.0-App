@@ -23,7 +23,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".views.AccountSetup"
+            android:name=".views.AccountSetupActivity"
             android:label="@string/title_activity_account_setup"
             android:parentActivityName=".views.MainActivity">
             <meta-data
@@ -39,7 +39,7 @@
                 android:value=".views.MainActivity" />
         </activity>
         <activity
-            android:name=".views.ControllerActivity"
+            android:name=".views.NodesControllerActivity"
             android:label="@string/title_controller"
             android:parentActivityName=".views.MainActivity">
             <meta-data

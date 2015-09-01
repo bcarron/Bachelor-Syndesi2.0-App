@@ -3,12 +3,12 @@ package ch.unige.carron8.bachelor.models;
 /**
  * Created by Blaise on 31.05.2015.
  */
-public class DeviceNode {
+public class NodeDevice {
     private String mNID;
     private NodeType mType;
     private String mStatus;
 
-    public DeviceNode(String NID, NodeType type, String status){
+    public NodeDevice(String NID, NodeType type, String status){
         this.mNID = NID;
         this.mType = type;
         this.mStatus = status;

@@ -15,7 +15,6 @@ import java.util.ArrayList;
 
 import ch.unige.carron8.bachelor.R;
 import ch.unige.carron8.bachelor.controllers.account.AccountController;
-import ch.unige.carron8.bachelor.models.Account;
 import ch.unige.carron8.bachelor.models.PreferenceKey;
 import ch.unige.carron8.bachelor.views.MainActivity;
 
@@ -25,21 +24,41 @@ import ch.unige.carron8.bachelor.views.MainActivity;
  */
 public class SensorController implements SharedPreferences.OnSharedPreferenceChangeListener {
     private static SensorController mInstance;
-    private Activity mContext;
-    private ArrayList<PendingIntent> sensorsLauncher;
+    private Activity mActivity;
+    private ArrayList<PendingIntent> mSensorsLauncher;
     private AlarmManager mAlarmManager;
     private ArrayList<String> mAvailableSensors;
+
+    public SensorController(Activity activity) {
+        this.mActivity = activity;
+
+        //Get all sensors
+        this.getSensorLaunchers();
+
+        //Get the alarm manager
+        mAlarmManager = (AlarmManager) mActivity.getSystemService(Context.ALARM_SERVICE);
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mActivity);
+        if (sharedPreferences.getBoolean(PreferenceKey.PREF_SENSOR_PERM.toString(), false)) {
+            this.enableSensors();
+        } else {
+            this.disableSensors();
+        }
+        if (sharedPreferences.getString(PreferenceKey.PREF_SERVER_URL.toString(), "").equals("")) {
+            ((TextView) mActivity.findViewById(R.id.server_display_status)).setText(R.string.connection_no_server_set);
+        }
+    }
 
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals(PreferenceKey.PREF_SERVER_URL.toString())) {
             Log.d("PREF", "Server changed");
-            final TextView connection = (TextView) mContext.findViewById(R.id.server_display_status);
-            String server_url = PreferenceManager.getDefaultSharedPreferences(mContext).getString(PreferenceKey.PREF_SERVER_URL.toString(), "");
+            final TextView connection = (TextView) mActivity.findViewById(R.id.server_display_status);
+            String server_url = PreferenceManager.getDefaultSharedPreferences(mActivity).getString(PreferenceKey.PREF_SERVER_URL.toString(), "");
 
             if (server_url.equals("")) {
                 connection.setText(R.string.connection_no_server_set);
             } else {
-                AccountController.getInstance(mContext).updateAccount();
+                AccountController.getInstance(mActivity).updateAccount();
                 Log.d("PREF", "User account updated");
             }
         }
@@ -61,61 +80,41 @@ public class SensorController implements SharedPreferences.OnSharedPreferenceCha
         }
     }
 
-    public SensorController(Activity context) {
-        this.mContext = context;
-
-        //Get all sensors
-        this.getSensorLaunchers();
-
-        //Get the alarm manager
-        mAlarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
-
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
-        if (sharedPreferences.getBoolean(PreferenceKey.PREF_SENSOR_PERM.toString(), false)) {
-            this.enableSensors();
-        } else {
-            this.disableSensors();
-        }
-        if (sharedPreferences.getString(PreferenceKey.PREF_SERVER_URL.toString(), "").equals("")) {
-            ((TextView) mContext.findViewById(R.id.server_display_status)).setText(R.string.connection_no_server_set);
-        }
-    }
-
-    public static synchronized SensorController getInstance(Activity context) {
+    public static synchronized SensorController getInstance(Activity activity) {
         if (mInstance == null) {
-            mInstance = new SensorController(context);
+            mInstance = new SensorController(activity);
         }
         return mInstance;
     }
 
     public void enableSensors() {
-        ((TextView) mContext.findViewById(R.id.sensors_status)).setText("");
+        ((TextView) mActivity.findViewById(R.id.sensors_status)).setText("");
         //Set Alarm to launch the listener
-        AccountController.getInstance(mContext).updateAccount();
-        for(PendingIntent sensorLauncher : sensorsLauncher){
-            mAlarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 0, Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(mContext).getString(PreferenceKey.PREF_SENSOR_RATE.toString(), "30")) * 1000, sensorLauncher);
+        AccountController.getInstance(mActivity).updateAccount();
+        for(PendingIntent sensorLauncher : mSensorsLauncher){
+            mAlarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 0, Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(mActivity).getString(PreferenceKey.PREF_SENSOR_RATE.toString(), "30")) * 1000, sensorLauncher);
         }
     }
 
     public void disableSensors() {
-        ((TextView) mContext.findViewById(R.id.sensors_status)).setText(R.string.sensors_disabled);
-        ((TextView) mContext.findViewById(R.id.server_display_status)).setText(R.string.connection_no_data);
-        ((MainActivity)mContext).removeSensors();
+        ((TextView) mActivity.findViewById(R.id.sensors_status)).setText(R.string.sensors_disabled);
+        ((TextView) mActivity.findViewById(R.id.server_display_status)).setText(R.string.connection_no_data);
+        ((MainActivity)mActivity).removeSensors();
         //Disable alarms
-        for(PendingIntent sensorLauncher : sensorsLauncher){
+        for(PendingIntent sensorLauncher : mSensorsLauncher){
             mAlarmManager.cancel(sensorLauncher);
         }
     }
 
     public void getSensorLaunchers(){
-        sensorsLauncher = new ArrayList<PendingIntent>();
-        SensorManager sensorManager = (SensorManager) mContext.getSystemService(Context.SENSOR_SERVICE);
+        mSensorsLauncher = new ArrayList<PendingIntent>();
+        SensorManager sensorManager = (SensorManager) mActivity.getSystemService(Context.SENSOR_SERVICE);
         mAvailableSensors = new ArrayList<>();
         for(Integer sensorType : SensorList.sensorUsed){
             if (sensorManager.getDefaultSensor(sensorType) != null){
-                Intent sensorIntent = new Intent(mContext, SensorService.class);
+                Intent sensorIntent = new Intent(mActivity, SensorService.class);
                 sensorIntent.setAction(String.valueOf(sensorType));
-                sensorsLauncher.add(PendingIntent.getService(mContext, 0, sensorIntent, PendingIntent.FLAG_UPDATE_CURRENT));
+                mSensorsLauncher.add(PendingIntent.getService(mActivity, 0, sensorIntent, PendingIntent.FLAG_UPDATE_CURRENT));
                 mAvailableSensors.add(SensorList.getStringType(sensorType));
             }
         }
@@ -129,7 +128,7 @@ public class SensorController implements SharedPreferences.OnSharedPreferenceCha
         this.mAvailableSensors = mAvailableSensors;
     }
 
-    public void setmContext(Activity context) {
-        this.mContext = context;
+    public void setmActivity(Activity activity) {
+        this.mActivity = activity;
     }
 }

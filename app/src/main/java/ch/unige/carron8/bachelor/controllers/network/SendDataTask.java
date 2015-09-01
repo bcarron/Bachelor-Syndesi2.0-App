@@ -14,10 +14,10 @@ import ch.unige.carron8.bachelor.models.BroadcastType;
  * Created by Blaise on 30.04.2015.
  */
 public class SendDataTask extends AsyncTask<SensorEvent, Void, SensorEvent> {
-    private Context mContext;
+    private Context mAppContext;
 
-    public SendDataTask(Context context) {
-        this.mContext = context;
+    public SendDataTask(Context appContext) {
+        this.mAppContext = appContext;
     }
 
     @Override
@@ -26,12 +26,12 @@ public class SendDataTask extends AsyncTask<SensorEvent, Void, SensorEvent> {
         Float data = event.values[0];
 
         //Send data to server
-        RESTService.getInstance(mContext).sendData(data, SensorList.getStringType(event.sensor.getType()));
+        RESTService.getInstance(mAppContext).sendData(data, SensorList.getStringType(event.sensor.getType()));
 
         //Send broadcast to update the UI if the app is active
         Intent localIntent = new Intent(String.valueOf(event.sensor.getType()));
         localIntent.putExtra(BroadcastType.BCAST_EXTRA_SENSOR_DATA.toString(), data);
-        LocalBroadcastManager broadcastManager = LocalBroadcastManager.getInstance(mContext);
+        LocalBroadcastManager broadcastManager = LocalBroadcastManager.getInstance(mAppContext);
         broadcastManager.sendBroadcast(localIntent);
 
         return event;

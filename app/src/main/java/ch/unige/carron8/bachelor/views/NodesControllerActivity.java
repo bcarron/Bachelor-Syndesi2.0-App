@@ -1,12 +1,10 @@
 package ch.unige.carron8.bachelor.views;
 
 import android.content.IntentFilter;
-import android.hardware.Sensor;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -20,15 +18,15 @@ import ch.unige.carron8.bachelor.controllers.network.NodeAdapter;
 import ch.unige.carron8.bachelor.controllers.network.RESTService;
 import ch.unige.carron8.bachelor.controllers.ui.UIReceiver;
 import ch.unige.carron8.bachelor.models.BroadcastType;
-import ch.unige.carron8.bachelor.models.DeviceNode;
+import ch.unige.carron8.bachelor.models.NodeDevice;
 
 /**
  * Created by Blaise on 31.05.2015.
  */
-public class ControllerActivity extends AppCompatActivity{
+public class NodesControllerActivity extends AppCompatActivity{
     private UIReceiver uiReceiver;
     private RESTService restService;
-    private ArrayList<DeviceNode> mNodeList;
+    private ArrayList<NodeDevice> mNodeList;
     private NodeAdapter nodeAdapter;
 
     @Override
@@ -51,15 +49,15 @@ public class ControllerActivity extends AppCompatActivity{
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                DeviceNode node = (DeviceNode)listView.getAdapter().getItem(position);
+                NodeDevice node = (NodeDevice)listView.getAdapter().getItem(position);
                 restService.toggleNode(node);
             }
         });
     }
 
-    public void addNode(DeviceNode node){
+    public void addNode(NodeDevice node){
         Boolean nodeExist = false;
-        for(DeviceNode currentNode : mNodeList){
+        for(NodeDevice currentNode : mNodeList){
             if(currentNode.getmNID().equals(node.getmNID())) {
                 currentNode.setmStatus(node.getmStatus());
                 nodeExist = true;
@@ -79,7 +77,7 @@ public class ControllerActivity extends AppCompatActivity{
         //List nodes
         restService.fetchNodes();
         //Reset the context on the REST service
-        restService.setmContext(this);
+        restService.setmAppContext(this);
         //Register the Broadcast listener
         IntentFilter filter = new IntentFilter(String.valueOf(BroadcastType.BCAST_TYPE_CONTROLLER_STATUS));
         LocalBroadcastManager.getInstance(this).registerReceiver(uiReceiver, filter);

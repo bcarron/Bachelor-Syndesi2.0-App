@@ -9,9 +9,6 @@ public class SensorData {
     private float mData;
     private String mDataType;
 
-    public SensorData() {
-    }
-
     public SensorData(String accountId, float data, String dataType) {
         this.mAccountId = accountId;
         this.mData = data;

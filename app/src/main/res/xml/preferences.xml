@@ -5,7 +5,7 @@
     <Preference android:title="@string/settings_modify_account">
         <intent
             android:action="android.intent.action.VIEW"
-            android:targetClass="ch.unige.carron8.bachelor.views.AccountSetup"
+            android:targetClass="ch.unige.carron8.bachelor.views.AccountSetupActivity"
             android:targetPackage="ch.unige.carron8.bachelor" />
     </Preference>
 
