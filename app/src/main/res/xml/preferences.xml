@@ -10,7 +10,7 @@
     </Preference>
 
     <ListPreference
-        android:defaultValue="5"
+        android:defaultValue="30"
         android:entries="@array/pref_rate_titles"
         android:entryValues="@array/pref_rate_values"
         android:key="PREF_SENSOR_RATE"
@@ -19,7 +19,7 @@
         android:title="@string/pref_title_sensor_rate" />
 
     <EditTextPreference
-        android:defaultValue=""
+        android:defaultValue="@string/pref_default_server_address"
         android:key="PREF_SERVER_URL"
         android:title="@string/pref_title_server_url"
         android:dialogMessage="Use this format address:port"/>
