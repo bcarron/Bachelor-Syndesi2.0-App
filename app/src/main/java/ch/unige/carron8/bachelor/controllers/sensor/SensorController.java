@@ -106,12 +106,17 @@ public class SensorController implements SharedPreferences.OnSharedPreferenceCha
         }
     }
 
+    /**
+     * Get all the sensors available and build the PendingIntent to launch SensorService
+     */
     public void getSensorLaunchers(){
         mSensorsLauncher = new ArrayList<PendingIntent>();
         SensorManager sensorManager = (SensorManager) mActivity.getSystemService(Context.SENSOR_SERVICE);
         mAvailableSensors = new ArrayList<>();
+        //Get all the sensors listed in SensorList that are available on the device
         for(Integer sensorType : SensorList.sensorUsed){
             if (sensorManager.getDefaultSensor(sensorType) != null){
+                //Build an Intent to launch the SensorService
                 Intent sensorIntent = new Intent(mActivity, SensorService.class);
                 sensorIntent.setAction(String.valueOf(sensorType));
                 mSensorsLauncher.add(PendingIntent.getService(mActivity, 0, sensorIntent, PendingIntent.FLAG_UPDATE_CURRENT));

@@ -183,6 +183,9 @@ public class RESTService {
         }
     }
 
+    /**
+     * Get all the nodes registered on the server
+     */
     public void fetchNodes() {
         String server_url = PreferenceManager.getDefaultSharedPreferences(mAppContext).getString(PreferenceKey.PREF_SERVER_URL.toString(), "");
         //TESTING URL
@@ -201,15 +204,18 @@ public class RESTService {
                     Log.d("HTTP", response);
 
                     try {
+                        //Build the XML document to store the response
                         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
                         DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
                         Document document = documentBuilder.parse(new InputSource(new StringReader(response)));
 
+                        //Get all the nodes tagged "gpio"
                         NodeList nl = document.getElementsByTagName("gpio");
                         for (int i = 0; i < nl.getLength(); i++) {
                             Node n = nl.item(i);
                             Element e = (Element) n.getFirstChild();
                             String device = e.getAttribute("name");
+                            //Add the node to the UI
                             NodeType nodeType = NodeType.getType(device);
                             ((NodesControllerActivity) mAppContext).addNode(new NodeDevice(device.substring(device.indexOf("NID: ") + 5, device.length()), nodeType, nodeType.getStatus("default")));
                         }
@@ -224,6 +230,7 @@ public class RESTService {
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
+                    //Update the UI with the error message
                     Log.d("HTTP", "Error connecting to server address " + url);
                     RESTService.sendControllerStatusBcast(mAppContext, mAppContext.getString(R.string.connection_error) + ": " + url);
                 }
